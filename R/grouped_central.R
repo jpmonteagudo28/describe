@@ -1,12 +1,28 @@
-#> Calculate mean for grouped data using frequency, either percent or counts
-#> The function will split each character element in x and find the midpoint of
-#> its lower and upper bounds.
-#> @params x: character vector of categories or ranges
-#> @params freq: numeric vector containing category counts or percentages
-#> @params freq_format: intended freq format. Use percent if you want freq
-#>        converted to percent
-#> @params na.rm: remove `NA` from calculations
-#>
+#' Calculate mean for grouped data using frequency, either percent or counts
+#' The function will split each character element in x and find the midpoint of
+#' its lower and upper bounds.
+#' @param x: character vector of categories or ranges
+#' @param freq: numeric vector containing category counts or percentages
+#' @param freq_format: intended freq format. Use percent if you want freq
+#'        converted to percent
+#' @param na.rm: remove `NA` from calculations
+#'
+#' @return a numeric vector of length 1L
+#' @export
+#'
+#' @examples
+#' age <- c("0-4","5-9","10-14",
+#'          "15-19","20-24",
+#'          "25-29","30-34",
+#'          "35-39","40-44",
+#'          "45-49","50-54",
+#'          "55-59","60-64",
+#'          "65-69","70-74",
+#'          "75-79","80-84",
+#'          "85-89")
+#'
+#' freq <- seq(5400, 300, by = -300)
+#' grouped.mean(age,freq, freq_format = "percent)
  grouped.mean <- function(x,
                           freq,
                           freq_format = "count",
@@ -50,12 +66,29 @@
   return(mu)
 }
 
-#> Calculate median of grouped data using frequency, either percent or counts
-#> @params x: character vector of categories or ranges
-#> @params freq: numeric vector containing category counts or percentages
-#> @params freq_format: intended freq format. Use percent if you want freq
-#>        converted to percent
-#> @params na.rm: remove `NA` from calculations
+#' Calculate median of grouped data using frequency, either percent or counts
+#' @param x: character vector of categories or ranges
+#' @param freq: numeric vector containing category counts or percentages
+#' @param freq_format: intended freq format. Use percent if you want freq
+#'        converted to percent
+#' @param na.rm: remove `NA` from calculations
+#'
+#' @return a numeric vector of length 1L
+#' @export
+#'
+#' @examples
+#' age <- c("0-4","5-9","10-14",
+#'          "15-19","20-24",
+#'          "25-29","30-34",
+#'          "35-39","40-44",
+#'          "45-49","50-54",
+#'          "55-59","60-64",
+#'          "65-69","70-74",
+#'          "75-79","80-84",
+#'          "85-89")
+#'
+#' freq <- seq(5400, 300, by = -300)
+#' grouped.median(age,freq)
 
 grouped.median <- function(x,
                            freq,
