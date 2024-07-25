@@ -13,9 +13,9 @@
 #> https://www.sciencedirect.com/science/article/pii/S0898122109004234
 
 #>
-#> #> params: @x: vector of non-collinear points
-#>         @iters: number of iterations used in Weiszfeld algorithm
-#>         @tol: tolerance value used to check convergence of changes between
+ #> @params x: vector of non-collinear points
+#>  @params iters: number of iterations used in Weiszfeld algorithm
+#>  @params tol: tolerance value used to check convergence of changes between
 #>               successive guesses.
 #>
 #> NOTE: If you're sample is a 1D set of points use `median` or `grouped.median` instead.
