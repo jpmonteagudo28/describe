@@ -9,14 +9,14 @@ its lower and upper bounds.}
 grouped.mean(x, freq, freq_format = "count", na.rm = FALSE)
 }
 \arguments{
-\item{x:}{character vector of categories or ranges}
+\item{x}{character vector of categories or ranges}
 
-\item{freq:}{numeric vector containing category counts or percentages}
+\item{freq}{numeric vector containing category counts or percentages}
 
-\item{freq_format:}{intended freq format. Use percent if you want freq
+\item{freq_format}{intended freq format. Use percent if you want freq
 converted to percent}
 
-\item{na.rm:}{remove \code{NA} from calculations}
+\item{na.rm}{remove \code{NA} from calculations}
 }
 \value{
 a numeric vector of length 1L
@@ -25,4 +25,18 @@ a numeric vector of length 1L
 Calculate mean for grouped data using frequency, either percent or counts
 The function will split each character element in x and find the midpoint of
 its lower and upper bounds.
+}
+\examples{
+age <- c("0-4","5-9","10-14",
+         "15-19","20-24",
+         "25-29","30-34",
+         "35-39","40-44",
+         "45-49","50-54",
+         "55-59","60-64",
+         "65-69","70-74",
+         "75-79","80-84",
+         "85-89")
+
+freq <- seq(5400, 300, by = -300)
+grouped.mean(age,freq, freq_format = "percent")
 }

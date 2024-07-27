@@ -2,26 +2,24 @@
 % Please edit documentation in R/geometric_central.R
 \name{geom.mad}
 \alias{geom.mad}
-\title{Calculate the median of distances to the geometric mean for a 2D+ space
-We're calculating the median absolute deviation for matrices and arrays}
+\title{Calculate the median of distances to the geometric mean for a 2D+ space}
 \usage{
 geom.mad(x, iters = 1000, na.rm = FALSE, ...)
 }
 \arguments{
+\item{x}{a numeric vector or matrix containing a set of points in n-dimensions}
+
+\item{iters}{number of iterations used in Weiszfeld algorithm}
+
+\item{na.rm}{set to FALSE by default to ignore NA. Set to TRUE to remove NA}
+
 \item{...}{optional arguments to specify alternative tolerance for convergence
-current tolerance set to 1e-8}
-
-\item{x:}{a numeric vector or matrix containing a set of points in n-dimensions}
-
-\item{iters:}{number of iterations used in Weiszfeld algorithm}
-
-\item{na.rm:}{option to leave or remove NAs}
+current tolerance set to 1e-8.}
 }
 \value{
 a numeric vector of length 1L.
 }
 \description{
-Calculate the median of distances to the geometric mean for a 2D+ space
 We're calculating the median absolute deviation for matrices and arrays
 }
 \examples{

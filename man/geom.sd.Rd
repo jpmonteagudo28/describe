@@ -2,26 +2,22 @@
 % Please edit documentation in R/geometric_central.R
 \name{geom.sd}
 \alias{geom.sd}
-\title{Calculate the geometric standard deviation (GSD) of the geometric mean. the GSD
-is a dimensionless (unitless) multiplicative factor. The GSD describes
-the range from the mean divided by GSD to the mean multiplied by GSD. Because of
-its multiplicative nature, the GSD cannot be added/subtracted from the mean.}
+\title{Calculate the geometric standard deviation (GSD) of the geometric mean.}
 \usage{
 geom.sd(x, ..., na.rm = FALSE)
 }
 \arguments{
+\item{x}{a numeric vector, matrix or data frame}
+
 \item{...}{additional parameters to be passed to 'geom.mean()'}
 
-\item{x:}{a numeric vector, matrix or data frame}
-
-\item{na.rm:}{indicate whether or not to remove NAs}
+\item{na.rm}{indicate whether or not to remove NAs}
 }
 \value{
 a numeric vector of length equal or greater than 1L.
 }
 \description{
-Calculate the geometric standard deviation (GSD) of the geometric mean. the GSD
-is a dimensionless (unitless) multiplicative factor. The GSD describes
+The GSD is a dimensionless (unitless) multiplicative factor. It describes
 the range from the mean divided by GSD to the mean multiplied by GSD. Because of
 its multiplicative nature, the GSD cannot be added/subtracted from the mean.
 }

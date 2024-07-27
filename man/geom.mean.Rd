@@ -2,28 +2,29 @@
 % Please edit documentation in R/geometric_central.R
 \name{geom.mean}
 \alias{geom.mean}
-\title{Calculate the geometric mean for a set of observations.
-The geometric mean is the nth root of the product of 'n' observations.
-It multiplies rather than sums the observations in a set and
-can be thought of as the exponential of the arithmetic mean of logarithms.
-We use  this definition to create our function. #' The 'geom.mean'
-function will calculate the mean for all numeric columns in  a matrix
-or data frame.}
+\title{Calculate the geometric mean for a set of observations.}
 \usage{
 geom.mean(x, ..., na.rm = FALSE)
 }
 \arguments{
+\item{x}{a numeric vector, matrix or data frame}
+
 \item{...}{additional parameters to be passed to 'mean()'}
 
-\item{x:}{a numeric vector, matrix or data frame}
-
-\item{na.rm:}{indicate whether or not to remove NAs}
+\item{na.rm}{indicate whether or not to remove NAs}
 }
 \value{
 a numeric vector of length equal or greater than 1L.
 }
 \description{
-NOTE: Because we're using logarithms, our observations must be non-negative.
+The geometric mean is the nth root of the product of 'n' observations.
+It multiplies the observations in a set and can be thought of as the
+exponential of the arithmetic mean of logarithms. We use  this definition
+to create our function. #' The 'geom.mean' function will calculate the
+mean for all numeric columns in  a matrix or data frame.
+}
+\details{
+Because we're using logarithms, our observations must be non-negative.
 Additionally, by using the geometric mean and SD and variance, we'll be
 measuring the log-normal dispersion of a log-normal distribution
 }

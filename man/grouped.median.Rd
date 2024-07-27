@@ -7,14 +7,14 @@
 grouped.median(x, freq, freq_format = "count", na.rm = FALSE)
 }
 \arguments{
-\item{x:}{character vector of categories or ranges}
+\item{x}{character vector of categories or ranges}
 
-\item{freq:}{numeric vector containing category counts or percentages}
+\item{freq}{numeric vector containing category counts or percentages}
 
-\item{freq_format:}{intended freq format. Use percent if you want freq
+\item{freq_format}{intended freq format. Use percent if you want freq
 converted to percent}
 
-\item{na.rm:}{remove \code{NA} from calculations}
+\item{na.rm}{remove \code{NA} from calculations}
 }
 \value{
 a numeric vector of length 1L

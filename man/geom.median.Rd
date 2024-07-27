@@ -7,28 +7,30 @@
 geom.median(x, iters = 1000, tol = 1e-08, na.rm = FALSE)
 }
 \arguments{
-\item{x:}{vector of non-collinear points
-@param iters: number of iterations used in Weiszfeld algorithm
-@param tol: tolerance value used to check convergence of changes between
-successive guesses.}
+\item{x}{vector of non-collinear points}
+
+\item{iters}{number of iterations used in Weiszfeld algorithm}
+
+\item{tol}{tolerance value used to check convergence of changes between
+successive guesses.Default set to 1e-8.}
+
+\item{na.rm}{set to FALSE. To handle NAs, set to TRUE.}
 }
 \value{
 a numeric vector of length 1L.
 }
 \description{
-Using the Weiszfeld algorithm: an iterative method to compute the geometric
+Using the Weiszfeld algorithm an iterative method to compute the geometric
 median of a set of points in Euclidean space. In general, measures of central
 tendency minimize the sum of the Euclidean distance from the center to each
-point in the set,this is represented as \verb{arg min}. We try to come up with an
+point in the set. We try to come up with an
 estimate of this center by first using our best guess and then approximating
 it by calculating  the distance from each point to a newly chosen point in
 the set and updating the center if the distance is smaller than that
 calculated using our best, initial guess.
 }
 \details{
-You can find an explanation of a similar algorithm here:
-https://www.sciencedirect.com/science/article/pii/S0898122109004234
-NOTE: If you're sample is a 1D set of points use \code{median} or \code{grouped.median} instead.
+If your sample is a 1D set of points use \code{median} or \code{grouped.median} instead.
 The \code{geom.median} function is used for samples of points in 2D+ space.
 }
 \examples{

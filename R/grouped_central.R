@@ -1,11 +1,13 @@
-#' Calculate mean for grouped data using frequency, either percent or counts
+#' Calculate mean for grouped data using frequency, either percent or counts.
+#'
 #' The function will split each character element in x and find the midpoint of
 #' its lower and upper bounds.
-#' @param x: character vector of categories or ranges
-#' @param freq: numeric vector containing category counts or percentages
-#' @param freq_format: intended freq format. Use percent if you want freq
+#'
+#' @param x character vector of categories or ranges
+#' @param freq numeric vector containing category counts or percentages
+#' @param freq_format intended freq format. Use percent if you want freq
 #'        converted to percent
-#' @param na.rm: remove `NA` from calculations
+#' @param na.rm remove `NA` from calculations
 #'
 #' @return a numeric vector of length 1L
 #' @export
@@ -22,7 +24,7 @@
 #'          "85-89")
 #'
 #' freq <- seq(5400, 300, by = -300)
-#' grouped.mean(age,freq, freq_format = "percent)
+#' grouped.mean(age,freq, freq_format = "percent")
  grouped.mean <- function(x,
                           freq,
                           freq_format = "count",
@@ -66,12 +68,13 @@
   return(mu)
 }
 
-#' Calculate median of grouped data using frequency, either percent or counts
-#' @param x: character vector of categories or ranges
-#' @param freq: numeric vector containing category counts or percentages
-#' @param freq_format: intended freq format. Use percent if you want freq
+#' Calculate median of grouped data using frequency, either percent or counts.
+#'
+#' @param x character vector of categories or ranges
+#' @param freq numeric vector containing category counts or percentages
+#' @param freq_format intended freq format. Use percent if you want freq
 #'        converted to percent
-#' @param na.rm: remove `NA` from calculations
+#' @param na.rm remove `NA` from calculations
 #'
 #' @return a numeric vector of length 1L
 #' @export

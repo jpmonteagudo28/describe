@@ -3,23 +3,22 @@
 \name{geom.zscore}
 \alias{geom.zscore}
 \title{Calculate the number of GSD by which the raw value is above/below the
-mean. The formula here makes use of the change of base property of logarithms}
+mean.}
 \usage{
 geom.zscore(x, ..., na.rm = FALSE)
 }
 \arguments{
+\item{x}{a numeric vector, matrix or data frame}
+
 \item{...}{additional parameters to be passed to 'geom.mean()'}
 
-\item{x:}{a numeric vector, matrix or data frame}
-
-\item{na.rm:}{indicate whether or not to remove NAs}
+\item{na.rm}{indicate whether or not to remove NAs}
 }
 \value{
 a matrix or array of z-scores of length > 1L.
 }
 \description{
-Calculate the number of GSD by which the raw value is above/below the
-mean. The formula here makes use of the change of base property of logarithms
+The formula here makes use of the change of base property of logarithms.
 }
 \examples{
 x <- matrix(rlnorm(60,1,1.4), ncol = 4)
