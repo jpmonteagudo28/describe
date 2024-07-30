@@ -11,7 +11,7 @@
 #'
 #' @details
 #' If your sample is a 1D set of points use `median` or `grouped.median` instead.
-#' The `geom.median` function is used for samples of points in 2D+ space.
+#' The `geom.median` function is used for samples of points in +2D space.
 #'
 #' @param x vector of non-collinear points
 #' @param iters number of iterations used in Weiszfeld algorithm
@@ -122,7 +122,7 @@ geom.mad <- function(x,
 #' @export
 #'
 #' @examples
-#' x <- matrix(rlnorm(60,1,1.4), ncol = 4)
+#' x <- rlnorm(60,1,1.4)
 #' geom.mean(x)
 geom.mean <- function(x, ..., na.rm = FALSE) {
   if(any(x < 0, na.rm = TRUE)){
@@ -136,11 +136,12 @@ geom.mean <- function(x, ..., na.rm = FALSE) {
 }
 
 
-#' Calculate the geometric standard deviation (GSD) of the geometric mean for
-#' a set og non-negative,non-zero observations.
+#' Calculate the geometric standard deviation (GSD)
 #'
-#' The GSD is a dimensionless (unitless) multiplicative factor. It describes
-#' the range from the mean divided by GSD to the mean multiplied by GSD. Because of
+#' The GSD is  the standard deviation of the geometric mean for of
+#' a set of non-negative,non-zero observations.The GSD is a dimensionless
+#' (unitless) multiplicative factor. It describes the range from the mean
+#' divided by GSD to the mean multiplied by GSD. Because of
 #' its multiplicative nature, the GSD cannot be added/subtracted from the mean.
 #'
 #' @param x a numeric vector, matrix or data frame
@@ -148,7 +149,7 @@ geom.mean <- function(x, ..., na.rm = FALSE) {
 #' @param na.rm indicate whether or not to remove NAs
 #'
 #' @details
-#' In order to calculate the GSD, we use mean imputation to deal with missingness
+#' In order to calculate the GSD, we use imputation methods to deal with missingness
 #' and preserve the structure of the matrix or data frame. Note that in some cases,
 #' this method might lead to an artificial increase or decrease in the asso-
 #' ciation between  outcome and original independent variables.
@@ -161,17 +162,19 @@ geom.mean <- function(x, ..., na.rm = FALSE) {
 #' x <- matrix(rlnorm(60,1,1.4), ncol = 4)
 #' geom.sd(x)
 
-geom.sd <- function(x,...,na.rm = FALSE){
+geom.sd <- function(x,
+                    impute_method = NULL,
+                    k = NULL,
+                    na.rm = FALSE,
+                    ...){
   if(any(x < 0, na.rm = TRUE)){
     return(NaN)
   }
   if (is.data.frame(x) || is.matrix(x)) {
     if (na.rm) {
-      x <- apply(x, 2, function(column) {
-        g_mean <- geom.mean(column, na.rm = TRUE)
-        column[is.na(column)] <- g_mean
-        return(column)
-      })
+      x <- hotdeck.impute(x,
+                          method = impute_method,
+                          k = k)
     }
     geom_sd <- apply(x, 2, function(column) {
       n <- length(column)
@@ -203,17 +206,36 @@ geom.sd <- function(x,...,na.rm = FALSE){
 #' @examples
 #' x <- matrix(rlnorm(60,1,1.4), ncol = 4)
 #' geom.var(x)
-geom.var <- function(x,...,na.rm = FALSE){
+geom.var <- function(x,
+                     impute_method = NULL,
+                     k = NULL,
+                     na.rm = FALSE,
+                     ...){
   if(any(x < 0, na.rm = TRUE)){
     return(NaN)
   }
-  if (na.rm) {
+  if (is.data.frame(x) || is.matrix(x)) {
+    if (na.rm) {
+      x <- hotdeck.impute(x,
+                          method = impute_method,
+                          k = k)
+    }
+    geom_var <- apply(x, 2, function(column) {
+      n <- length(column)
+      g_mean <- geom.mean(column)
+      g.var <- exp(sum((log(column/g_mean))^2) / n)
+    })
+    return(geom_var)
+
+  } else {
+      if (na.rm) {
       x <- x[!is.na(x)]
     }
     n <- length(x)
     g_mean <- geom.mean(x)
     g.var <- exp(sum((log(x/g_mean))^2) / n)
     return(g.var)
+  }
 }
 
 #' Calculate the number of GSD by which the raw value is above/below the
