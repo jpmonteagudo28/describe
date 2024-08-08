@@ -1,0 +1,36 @@
+Checklist for describe package:
+
+Goal: To provide estimates of central tendency for different distributions and simple imputation methods for handling missing data.
+
+1. Add imputation methods to keep rectangular data (matrix/df)
+
+2. Add imputation method argument to each function. If imputation not chosen, treat rectangular data as dimensionless object
+
+3. Update description files
+
+4. Update markdown help for each function except Internals
+
+5. Add logo
+
+6. Create pkgdown site with url: describe.jpmonteagudo.com
+
+7. Add R CMD check and pkgdown workflows
+
+8. Create utils.R file for helpers
+
+
+IMPUTATION CHECKLIST
+
+1. regression models defined for normal and non-normal data and classification models (lm,rlm,glm)
+	
+	a. MASS package: rlm - robust
+	b. 
+
+2. Check if predictive mean matching can be used for singular imputation
+
+3. Check if predictive mean matching needs additional checks and how it's creating its regression models
+
+
+
+
+
