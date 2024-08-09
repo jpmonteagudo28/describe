@@ -1,16 +1,24 @@
-#---------------------------------------#
-# Convert character vector to factor
+#-------------------------------------------#
+# Author: JP Monteagudo
+# Liberty University, Dept. of Public Health
+#-------------------------------------------#
+#
+# Convert vector of type character to factor
 char2factor <- function(data) {
 
-  if(!is.matrix(data) || !is.data.frame(data)){
+  if(is.vector(data) && is.character(data)){
 
     data <- as.factor(data)
-  } else {
+  } else if (is.data.frame(data) || is.matrix(data)) {
+
     char_vars <- which(sapply(data, is.character))
 
     for (var in char_vars) {
       data[[var]] <- as.factor(data[[var]])
     }
+  } else {
+
+    stop("Input must be a vector, data frame, or matrix.")
   }
   return(data)
 }
@@ -109,24 +117,34 @@ calc.dist <- function(x,y){
 #----------------------------------------#
 # Generate predicted values from data using
 # different regression models
-gen.predict <- function(data, varname, robust = FALSE, family = "AUTO") {
+gen.predict <- function(data,
+                        varname,
+                        robust = FALSE,
+                        family = "AUTO",
+                        verbose = TRUE) {
 
   complete_cases <- complete.cases(data)
 
   if(sum(complete_cases) == 0) {
-    warning(paste("Imputation not performed. \nNo complete cases for variable:", varname))
+    if (verbose) {
+      warning(sprintf("Imputation not performed. No complete cases for variable: %s", varname))
+    }
     return(NULL)
   }
 
   # Check for sufficient degrees of freedom
   if (sum(complete_cases) <= ncol(data)) {
-    warning(paste("Stopping missing value prediction. \nInsufficient degrees of freedom for variable:", varname))
+    if (verbose) {
+      warning(sprintf("Stopping missing value prediction. Insufficient degrees of freedom for variable: %s", varname))
+    }
     return(NULL)
   }
 
   # Check for one unique value
   if (length(unique(data[[varname]][complete_cases])) == 1) {
-    warning(paste("Stopping missing value prediction. \nOnly one unique value for variable:", varname))
+    if (verbose) {
+      warning(sprintf("Stopping missing value prediction. Only one unique value for variable: %s", varname))
+    }
     return(NULL)
   }
 
@@ -173,7 +191,9 @@ gen.predict <- function(data, varname, robust = FALSE, family = "AUTO") {
                  family = model_type)
     }
   }, error = function(e) {
-    warning(paste("Model fitting failed for variable:", varname, "Error:", e$message))
+    if (verbose) {
+      warning(sprintf("Model fitting failed for variable: %s. Error: %s", varname, e$message))
+    }
     return(NULL)
   })
   if(is.null(model)) return(NULL)
@@ -182,11 +202,50 @@ gen.predict <- function(data, varname, robust = FALSE, family = "AUTO") {
     stats::predict(model, newdata = data,
                    type = if (model_type == "gaussian") "response" else "probs")
   }, error = function(e) {
-    warning(paste("Prediction failed for variable:", varname, "\nError:", e$message))
+    if (verbose) {
+      warning(sprintf("Prediction failed for variable: %s. Error: %s", varname, e$message))
+    }
     return(NULL)
   })
-
   return(predicted)
+}
+
+#-------------------------------------------#
+# Check remaining missing values in matrix or
+# data frame
+
+check.missing <- function(data, post_data = NULL, verbose = TRUE) {
+
+
+  tot_initial_obs <- prod(dim(data))
+  initial_na <- sum(is.na(data))
+  tot_na_prcnt <- (initial_na / tot_initial_obs) * 100
+
+
+  if (is.null(post_data)) {
+    post_data <- data
+  }
+
+
+  tot_obs <- prod(dim(post_data))
+  remain_na_count <- sum(is.na(post_data))
+  remain_na_prcnt <- (remain_na_count / tot_obs) * 100
+
+
+  if (verbose) {
+    cat(sprintf("Initial missing values: %d (%.2f%%)\n", initial_na, tot_na_prcnt))
+    cat(sprintf("Remaining missing values: %d (%.2f%%)\n", remain_na_count, remain_na_prcnt))
+  }
+
+
+  if (remain_na_count > 0) {
+    message_text <- sprintf("Initial missing: %.2f%%. Remaining missing: %.2f%%.", tot_na_prcnt, remain_na_prcnt)
+    if (verbose) {
+      warning(sprintf("%s Imputation not performed or missing values in the regressors.", message_text))
+    } else {
+      warning("Imputation not performed or missing values in the regressors.")
+    }
+  }
 }
 
 

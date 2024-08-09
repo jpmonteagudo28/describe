@@ -99,6 +99,10 @@ coldeck.impute <- function(x,
 #' Currently k defaults to 3 but can be changed.
 #' @param seed numeric vector used for reproducible results. Used to sample the same predicted value over time.
 #'
+#' @return a matrix or fata frame containing the imputed dataset.
+#' @export
+#'
+#'
 #' @details
 #'
 #' How's predictive mean matching different from conditional mean imputation(CMI)?
@@ -108,7 +112,7 @@ coldeck.impute <- function(x,
 #' missing values, like CMI, however, PMM will also fill in the missing value by
 #' randomly sampling observed values whose predicted values are closest
 #' to the predicted values of the missing observation. This is currently done using
-#' the nearest neighbor approach with a set number of nighbors (3) but can be changed
+#' the nearest neighbor approach with a set number of neighbors (3) but can be changed
 #' depending on your data.
 #'
 #' @examples
@@ -121,25 +125,32 @@ coldeck.impute <- function(x,
 #' data$x2[sample(1:100, 15)] <- NA
 #' data$y[sample(1:100, 10)] <- NA
 
+#' Appending factor variable and using a robust multinomial model
 #' fact_dat <- data.frame(data, c = gl(5,20))
+#' pmean.match(fact_dat, robust = TRUE)
 #'
 pmean.match <- function(data,
                         family = "AUTO",
                         robust = FALSE,
                         k = 3,
-                        char_to_factor = TRUE,
-                        seed = NULL){
+                        char_to_factor = FALSE,
+                        seed = NULL,
+                        verbose = FALSE){
 
   if(!is.data.frame(data)){
     data <- as.data.frame(data)
   }
 
-  stopifnot(is.numeric(k))
+  stopifnot(is.character(family),
+            is.logical(robust),
+            is.numeric(k),
+            is.logical(char_to_factor))
 
   if(char_to_factor){
     data <- char2factor(data)
-    warning("Converted character variable to unordered factor variable
-            \nto avoid unexpected behavior.")
+    if(verbose){
+    warning("Converted character variable to unordered factor variable")
+    }
   }
 
   if (!is.null(seed)) {
@@ -180,11 +191,90 @@ pmean.match <- function(data,
       }
     }
   }
+  check.missing(data, dat2impute, verbose = verbose)
+
   return(dat2impute)
 }
 
-cond.mean <- function(data,
-                      family = "AUTO",
-                      robust = FALSE){
+#' @description
+#' Imputation of missing values through conditional mean ipmutation (CMI). This ipmutation
+#' method replaces missing values with the expected value of the missing variable, given
+#' other variables in the dataset. Predictions of conditional mean performed using specific
+#' regression models.
+#'
+#' @param data a numeric matrix or data frame of at least 2 columns.
+#' @param family the distribution family of your observations. The family arguments defaults
+#' to 'AUTO'; and it will automatically select a distribution family (gaussian, binomial, multinomial) based on the type of
+#' variable (numeric or factor). The distribution family dictates the regression model used (lm,glm, multinom).
+#' However, the user can change the family argument to match his response variable distribution
+#' and the function will adapt to this input by using the generalized linear model or beta regression.
+#' @param robust logical indicated whether to use robust estimation methods or ignore them. If set to 'TRUE',
+#' the function will make use of robust linear and generalized linear models to make its prediction.
+#'
+#' @return a matrix or data frame containing the imputed dataset.
+#' @export
+#'
+#'
+#' @details CMI is a univariate imputation method that leverages the relationship between
+#' variables in the data to make informed predictions about missing values. Although
+#' this method reduces bias and aims to maintain the relationship among variables, it
+#' will yield residuals with less variation than the original data.
+#'
+#' CMI will fail if a regressor also contains missing values, thus making imputation of
+#' the target's missing values impossible. The user will want to understand and fill in
+#' as much of the missing data as possible before imputing through this method. If the
+#' regressors contain missing values, it is better to use multiple imputation techniques.
+#'
+#'
+#' @examples
+#' set.seed(123)
+# data <- data.frame(x1 = rnorm(100),x2 = rnorm(100),y = rnorm(100))
+#'
+#' Introduce missing values
+#' data$x1[sample(1:100, 13)] <- NA
+#' ci.impute(data = data)
 
+cm.impute <- function(data,
+                      family = "AUTO",
+                      robust = FALSE,
+                      char_to_factor = FALSE,
+                      verbose = FALSE) {
+  if (!is.data.frame(data)) {
+    data <- as.data.frame(data)
+  }
+
+  stopifnot(is.character(family),
+            is.logical(robust),
+            is.logical(char_to_factor))
+
+  if (char_to_factor) {
+    data <- char2factor(data)
+    warning("Converted character variable to unordered factor variable")
+  }
+
+  # find where NA's located
+  na_where <- lapply(data, is.na)
+
+  # save copy of OG data for imputation
+  dat2impute <- data
+
+  # Substitute missing values w/ obs_vals
+  for (var in names(data)) {
+    na_index <- which(na_where[[var]])
+
+    if (length(na_index) > 0) {
+      pred_val <-
+        gen.predict(dat2impute, var, robust = robust, family = family)
+
+      if (!is.null(pred_val)) {
+        # Replace only the missing values with their corresponding predictions
+        dat2impute[[var]][na_index] <- pred_val[na_index]
+      }
+    }
+  }
+  #Final check for any remaining missing values
+  check.missing(data,dat2impute, verbose = verbose)
+
+  return(dat2impute)
 }
+
