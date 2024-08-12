@@ -116,7 +116,6 @@ coldeck.impute <- function(x,
 #' depending on your data.
 #'
 #' @examples
-#' # Sample dataset
 #' set.seed(123)
 #' data <- data.frame(x1 = rnorm(100),x2 = rnorm(100),y = rnorm(100))
 #'
@@ -191,6 +190,7 @@ pmean.match <- function(data,
       }
     }
   }
+  #Final check for any remaining missing values
   check.missing(data, dat2impute, verbose = verbose)
 
   return(dat2impute)
@@ -232,7 +232,7 @@ pmean.match <- function(data,
 #'
 #' Introduce missing values
 #' data$x1[sample(1:100, 13)] <- NA
-#' ci.impute(data = data)
+#' cm.impute(data = data)
 
 cm.impute <- function(data,
                       family = "AUTO",

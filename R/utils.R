@@ -211,41 +211,78 @@ gen.predict <- function(data,
 }
 
 #-------------------------------------------#
-# Check remaining missing values in matrix or
-# data frame
+# Reshape data frame by creating binary column
+# indicating whether rows contain missing values.
 
-check.missing <- function(data, post_data = NULL, verbose = TRUE) {
+na.col.add <- function(x) {
 
-
-  tot_initial_obs <- prod(dim(data))
-  initial_na <- sum(is.na(data))
-  tot_na_prcnt <- (initial_na / tot_initial_obs) * 100
-
-
-  if (is.null(post_data)) {
-    post_data <- data
+  if(!is.data.frame(x) || !is.matrix(x)){
+    x <- as.data.frame(x)
   }
 
+  is_na <- ifelse(rowSums(is.na(x)) > 0,1,0)
+   x <- cbind(x,is_na)
 
-  tot_obs <- prod(dim(post_data))
-  remain_na_count <- sum(is.na(post_data))
-  remain_na_prcnt <- (remain_na_count / tot_obs) * 100
-
-
-  if (verbose) {
-    cat(sprintf("Initial missing values: %d (%.2f%%)\n", initial_na, tot_na_prcnt))
-    cat(sprintf("Remaining missing values: %d (%.2f%%)\n", remain_na_count, remain_na_prcnt))
-  }
-
-
-  if (remain_na_count > 0) {
-    message_text <- sprintf("Initial missing: %.2f%%. Remaining missing: %.2f%%.", tot_na_prcnt, remain_na_prcnt)
-    if (verbose) {
-      warning(sprintf("%s Imputation not performed or missing values in the regressors.", message_text))
-    } else {
-      warning("Imputation not performed or missing values in the regressors.")
-    }
-  }
+   return(x)
 }
 
+#----------------------------------------------#
+# Use a Šidák correction to reduce family-wise error
+# in model comparisons for MCAR/MAR check. The Šidák
+# correction assumes that each comparison is independent.
+# The correction assumes that for m variables, there will
+# be m(m-1) tests.
+
+use.sidak <- function(p_value,nvars){
+
+  stopifnot(is.numeric(p_value))
+
+  adj_sidak <- (1 - (1 - p_value)^(nvars*(nvars-1)))
+
+  return(adj_sidak)
+}
+
+#-----------------------------------------------#
+# Create custom missing pattern and ranking function
+rank.pattern <- function(data) {
+  n_rows <- nrow(data)
+  n_cols <- ncol(data)
+
+  # Step 1: Convert missing patterns to integers using the custom
+  # bitwise shift operator
+  patterns <- integer(n_rows)
+  for (i in 1:n_cols) {
+    patterns <- patterns + (as.integer(is.na(data[[i]])) %<<% (i - 1))
+  }
+
+  # Step 2: Create a hash table for unique patterns
+  pattern_hash <- new.env(hash = TRUE)
+
+  # Step 3: Assign ranks to patterns
+  ranks <- integer(n_rows)
+  current_rank <- 1
+
+  for (i in 1:n_rows) {
+    pattern <- patterns[i]
+    if (is.null(pattern_hash[[as.character(pattern)]])) {
+      pattern_hash[[as.character(pattern)]] <- current_rank
+      current_rank <- current_rank + 1
+    }
+    ranks[i] <- pattern_hash[[as.character(pattern)]]
+  }
+
+  return(ranks)
+}
+
+#---------------------------------------------------#
+# Custom right/left bit-shift operator
+`%<<%` <- function(x,shift){
+  bitwShiftL(x,shift)
+}
+
+`%>>%` <- function(x,shift){
+  bitwShiftR(x,shift)
+}
+
+#----------------------------------------------------#
 
