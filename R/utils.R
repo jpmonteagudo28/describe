@@ -25,21 +25,40 @@ char2factor <- function(data) {
 
 #---------------------------------------#
 # Create correlated, synthetic normal variables
-gen.syn.vars <- function(len, rho, sigma) {
+gen.syn.vars <- function(len,
+                         rho,
+                         sigma,
+                         n_vars,
+                         na_prob = 0) {
+
   stopifnot(is.numeric(len),
             is.numeric(rho),
             is.numeric(sigma),
             rho >= -1,
-            rho <= 1)
+            rho <= 1,
+            length(rho) %in% c(1, (n_vars * (n_vars - 1)) / 2),
+            length(sigma) == n_vars,
+            n_vars >= 2,
+            na_prob >= -1,
+            na_prob <= 1)
 
   n <- len
-  A <- matrix(c(1, rho, rho, 1), 2,2)
+  A <- diag(n_vars)
+  A[upper.tri(A)]<- rho
+  A[lower.tri(A)] <- rho
   L <- chol(A)
-  eps <- diag(sigma)
+  eps <- diag(sigma, nrow = n_vars)
 
   lambda <- t(L) %*% eps
-  x <- cbind(rnorm(n),rnorm(n))
+  x <- matrix(rnorm(n * n_vars), nrow = n, ncol = n_vars)
   z <- x %*% lambda
+  z <- as.data.frame(z)
+
+  # Introduce NAs based on na_prob
+  if (na_prob > 0) {
+    na_mask <- matrix(runif(n * n_vars) < na_prob, n, n_vars)
+    z[na_mask] <- NA
+  }
 
   return(z)
 }

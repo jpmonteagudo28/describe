@@ -160,6 +160,13 @@ check.MAR <- function(data,
 #'code is adapted from Eric Stemmler: \url{https://web.archive.org/web/20201120030409/https://stats-bayes.com/post/2020/08/14/r-function-for-little-s-test-for-data-missing-completely-at-random/}
 #' and naniar's `mcar_test`.
 #'
+#' @examples
+#' set.seed(123)
+#' data <- gen.syn.vars(100,rho = c(.8,.53,.23,-.13,.35,-.56),
+#'                      sigma = c(1,2,1,2), n_vars = 4)
+#'
+#'
+#'
 check.MCAR <- function(data,
                        digits = 3) {
 
