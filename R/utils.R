@@ -25,6 +25,7 @@ char2factor <- function(data) {
 
 #---------------------------------------#
 # Create correlated, synthetic normal variables
+# with user-specified probability of missing values
 gen.syn.vars <- function(len,
                          rho,
                          sigma,
@@ -262,8 +263,14 @@ use.sidak <- function(p_value,nvars){
 }
 
 #-----------------------------------------------#
-# Create custom missing pattern and ranking function
+# Create custom pattern building and ranking
+# function
 pattern.rank <- function(data) {
+
+  if(!is.data.frame(data)){
+    data <- as.data.frame(data)
+  }
+
   n_rows <- nrow(data)
   n_cols <- ncol(data)
 

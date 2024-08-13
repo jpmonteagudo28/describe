@@ -123,7 +123,7 @@ check.MAR <- function(data,
       result[j, i] <- adj_p_value
     }
   }
-  result <- round(result * 100, digits)
+  result <- round(result, digits)
 
   return(result)
 }
@@ -163,7 +163,7 @@ check.MAR <- function(data,
 #' @examples
 #' set.seed(123)
 #' data <- gen.syn.vars(100,rho = c(.8,.53,.23,-.13,.35,-.56),
-#'                      sigma = c(1,2,1,2), n_vars = 4)
+#'                      sigma = c(1,2,1,2), n_vars = 4, na_prob = .17)
 #'
 #'
 #'
@@ -177,7 +177,7 @@ check.MCAR <- function(data,
 
   # Convert to matrix if it's a data frame
   if (is.data.frame(data)) {
-    data <- as.matrix(data)
+    data <- data.matrix(data)
   }
 
   n_var <- ncol(data)
@@ -205,39 +205,37 @@ check.MCAR <- function(data,
 
   # Loop over each group
   for (i in seq_len(n_patterns)) {
-    group_data <- split_data[[i]][, -ncol(split_data[[i]])]
-    kj[i] <- sum(!is.na(colMeans(group_data)))
 
-    if (kj[i] > 0) {
-      mu <- colMeans(group_data, na.rm = TRUE) - grand_mean
-      keep <- !is.na(mu)
-      mu <- mu[keep]
-      sigma <- grand_cov[keep, keep, drop = FALSE]
 
-      d2[i] <- nrow(group_data) * (t(mu) %*% solve(sigma) %*% mu)
-    }
+  group_data <- split_data[[i]][, -ncol(split_data[[i]])]
+
+  # Calculate kj for the current pattern
+  kj[i] <- sum(1 * !is.na(colSums(group_data)))
+
+  mu <- colMeans(group_data, na.rm = TRUE) - grand_mean
+  keep <- !is.na(mu)
+  mu <- mu[keep]
+  sigma <- grand_cov[keep, keep, drop = FALSE]
+
+  d2[i] <- nrow(group_data) * (t(mu) %*% solve(sigma) %*% mu)
+}
+
+# Aggregate results
+total_d2 <- sum(d2)
+total_kj <- sum(kj)
+df <- total_kj - n_var
+
+p_value <- tryCatch(
+  stats::pchisq(total_d2, df, lower.tail = FALSE),
+  error = function(e) {
+    warning("Error in p-value calculation: ", e$message)
+    return(NA)
   }
-
-  # Aggregate results
-  total_d2 <- sum(d2)
-  if (total_d2 < 0) {
-    warning("Negative total_d2 computed. This shouldn't happen and may indicate numerical instability.")
-    total_d2 <- 0
-  }
-  total_kj <- sum(kj)
-  df <- max(total_kj - n_var, 0)  # Ensure df is non-negative
-
-  p_value <- tryCatch(
-    pchisq(total_d2, df, lower.tail = FALSE),
-    error = function(e) {
-      warning("Error in p-value calculation: ", e$message)
-      return(NA)
-    }
-  )
+)
 
   # Output the results
   result <- data.frame(
-    statistic = total_d2,
+    statistic = round(total_d2, digits = digits),
     df = df,
     p.value = round(p_value, digits = digits),
     missing.patterns = max(na_pattern)
