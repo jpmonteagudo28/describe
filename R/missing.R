@@ -161,29 +161,84 @@ check.MAR <- function(data,
 #' and naniar's `mcar_test`.
 #'
 check.MCAR <- function(data,
-                       digits = 3){
+                       digits = 3) {
 
   stopifnot(is.numeric(digits))
 
-  if(!is.data.frame(data) && !is.matrix(data))
+  if (!is.data.frame(data) && !is.matrix(data))
     stop("Data must be a data frame or matrix of at least two columns")
 
-  # Need to transform data to data matrix to work with norm pkg
-  if (is.data.frame(x)){
-    x <- data.matrix(x)
+  # Convert to matrix if it's a data frame
+  if (is.data.frame(data)) {
+    data <- as.matrix(data)
   }
 
   n_var <- ncol(data)
-  is_na <- is.na(data)
-  colnum_na <- colSums(is_na)
   varnames <- colnames(data)
 
+  # Add pattern column to data
+  na_pattern <- pattern.rank(data)
+  miss_data <- cbind(data, na_pattern)
 
+  # Maximum likelihood estimation from {norm}
+  s <- norm::prelim.norm(data)
+  ll <- norm::em.norm(s, showits = FALSE)
+  fit <- norm::getparam.norm(s = s, theta = ll)
+  grand_mean <- fit$mu
+  grand_cov <- fit$sigma
+  colnames(grand_cov) <- rownames(grand_cov) <- varnames
 
+  # Split data by missing pattern
+  split_data <- split(data.frame(miss_data), na_pattern)
 
+  # Initialize vectors to store results
+  n_patterns <- length(split_data)
+  d2 <- numeric(n_patterns)
+  kj <- numeric(n_patterns)
 
+  # Loop over each group
+  for (i in seq_len(n_patterns)) {
+    group_data <- split_data[[i]][, -ncol(split_data[[i]])]
+    kj[i] <- sum(!is.na(colMeans(group_data)))
 
+    if (kj[i] > 0) {
+      mu <- colMeans(group_data, na.rm = TRUE) - grand_mean
+      keep <- !is.na(mu)
+      mu <- mu[keep]
+      sigma <- grand_cov[keep, keep, drop = FALSE]
+
+      d2[i] <- nrow(group_data) * (t(mu) %*% solve(sigma) %*% mu)
+    }
+  }
+
+  # Aggregate results
+  total_d2 <- sum(d2)
+  if (total_d2 < 0) {
+    warning("Negative total_d2 computed. This shouldn't happen and may indicate numerical instability.")
+    total_d2 <- 0
+  }
+  total_kj <- sum(kj)
+  df <- max(total_kj - n_var, 0)  # Ensure df is non-negative
+
+  p_value <- tryCatch(
+    pchisq(total_d2, df, lower.tail = FALSE),
+    error = function(e) {
+      warning("Error in p-value calculation: ", e$message)
+      return(NA)
+    }
+  )
+
+  # Output the results
+  result <- data.frame(
+    statistic = total_d2,
+    df = df,
+    p.value = round(p_value, digits = digits),
+    missing.patterns = max(na_pattern)
+  )
+
+  return(result)
 }
+
 
 
 

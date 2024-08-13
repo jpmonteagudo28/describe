@@ -244,7 +244,7 @@ use.sidak <- function(p_value,nvars){
 
 #-----------------------------------------------#
 # Create custom missing pattern and ranking function
-rank.pattern <- function(data) {
+pattern.rank <- function(data) {
   n_rows <- nrow(data)
   n_cols <- ncol(data)
 
@@ -275,7 +275,9 @@ rank.pattern <- function(data) {
 }
 
 #---------------------------------------------------#
-# Custom right/left bit-shift operator
+# Custom right/left bit-shift operator wrapper for
+# base R bit-wise ops.
+
 `%<<%` <- function(x,shift){
   bitwShiftL(x,shift)
 }
