@@ -68,23 +68,27 @@ gen.syn.vars <- function(len,
 # Generate nth samples for multiple imputation
 gen.nth.samples <- function(data,
                             iters = 3,
-                            seed = 2899,
+                            seed = NULL,
                             na.rm = TRUE){
   stopifnot(is.data.frame(data) || is.matrix(data),
             is.numeric(iters),
-            is.numeric(seed),
             is.logical(na.rm))
 
-  if(na.rm){
-    comp_data <- data[complete.cases(data), ]
+  if(is.null(seed)){
+    stop("Provide a numeric seed argument for reproducible results.")
+  }
 
-    if(nrow(comp_data) == 0) {
+
+  if(na.rm){
+    complete_data <- data[complete.cases(data), ]
+
+    if(nrow(complete_data) == 0) {
       warning("No complete cases found.
               Using original data for imputation.")
       comp_data <- data
     }
   } else {
-    comp_data <- data
+    complete_data <- data
   }
 
   make.values <- function(col,
@@ -110,12 +114,12 @@ gen.nth.samples <- function(data,
   }
 
   set.seed(seed = seed)
-  imp_data <- replicate(iters,comp_data,simplify = FALSE)
+  imp_data <- replicate(iters,complete_data,simplify = FALSE)
 
-  for (j in 1:ncol(comp_data)) {
-    if (any(is.na(comp_data[, j]))) {
-      sim_vals <- make.values(comp_data[, j], iters)
-      na_index <- which(is.na(comp_data[, j]))
+  for (j in 1:ncol(complete_data)) {
+    if (any(is.na(complete_data[, j]))) {
+      sim_vals <- make.values(complete_data[, j], iters)
+      na_index <- which(is.na(complete_data[, j]))
       for (k in 1:iters) {
         imp_data[[k]][na_index, j] <- sim_vals[na_index, k]
       }
@@ -138,7 +142,7 @@ calc.dist <- function(x,y){
 # Generate predicted values from data using
 # different regression models
 gen.predict <- function(data,
-                        varname,
+                        var_name,
                         robust = FALSE,
                         family = "AUTO",
                         verbose = TRUE) {
@@ -161,7 +165,7 @@ gen.predict <- function(data,
   }
 
   # Check for one unique value
-  if (length(unique(data[[varname]][complete_cases])) == 1) {
+  if (length(unique(data[[var_name]][complete_cases])) == 1) {
     if (verbose) {
       warning(sprintf("Stopping missing value prediction. Only one unique value for variable: %s", varname))
     }
@@ -170,10 +174,10 @@ gen.predict <- function(data,
 
   #Check data distribution family
   if (family == "AUTO") {
-    if (is.numeric(data[[varname]])) {
+    if (is.numeric(data[[var_name]])) {
       model_type <- "gaussian"
-    } else if (is.factor(data[[varname]])) {
-      nLev <- length(levels(data[[varname]]))
+    } else if (is.factor(data[[var_name]])) {
+      nLev <- length(levels(data[[var_name]]))
       if (nLev == 2) {
         model_type <- "binomial"
       } else {
@@ -188,31 +192,31 @@ gen.predict <- function(data,
   model <- tryCatch({
     if (model_type == "gaussian") {
       if (robust) {
-        MASS::rlm(as.formula(paste(varname, "~ .")), data = data[complete_cases,])
+        MASS::rlm(as.formula(paste(var_name, "~ .")), data = data[complete_cases,])
       } else {
-        stats::lm(as.formula(paste(varname, "~ .")), data = data[complete_cases,])
+        stats::lm(as.formula(paste(var_name, "~ .")), data = data[complete_cases,])
       }
     } else if (model_type == "binomial") {
       if (robust) {
-        robustbase::glmrob(as.formula(paste(varname, "~ .")), data = data[complete_cases,],
+        robustbase::glmrob(as.formula(paste(var_name, "~ .")), data = data[complete_cases,],
                            family = binomial)
       } else {
-        stats::glm(as.formula(paste(varname, "~ .")), data = data[complete_cases,],
+        stats::glm(as.formula(paste(var_name, "~ .")), data = data[complete_cases,],
                    family = binomial)
       }
     } else if(model_type == "multinomial") {
-      nnet::multinom(as.formula(paste(varname, "~ .")), data = data[complete_cases,])
+      nnet::multinom(as.formula(paste(var_name, "~ .")), data = data[complete_cases,])
 
     } else if (model_type == "beta") {
-      betareg::betareg(as.formula(paste(varname, "~ .")), data = data[complete_cases,])
+      betareg::betareg(as.formula(paste(var_name, "~ .")), data = data[complete_cases,])
 
     } else {
-      stats::glm(as.formula(paste(varname, "~ .")), data = data[complete_cases,],
+      stats::glm(as.formula(paste(var_name, "~ .")), data = data[complete_cases,],
                  family = model_type)
     }
   }, error = function(e) {
     if (verbose) {
-      warning(sprintf("Model fitting failed for variable: %s. Error: %s", varname, e$message))
+      warning(sprintf("Model fitting failed for variable: %s. Error: %s", var_name, e$message))
     }
     return(NULL)
   })
@@ -223,10 +227,124 @@ gen.predict <- function(data,
                    type = if (model_type == "gaussian") "response" else "probs")
   }, error = function(e) {
     if (verbose) {
-      warning(sprintf("Prediction failed for variable: %s. Error: %s", varname, e$message))
+      warning(sprintf("Prediction failed for variable: %s. Error: %s", var_name, e$message))
     }
     return(NULL)
   })
+  return(predicted)
+}
+
+#-------------------------------------------#
+# Generate predicted values for stochastic
+# regression imputation
+stochastic.predict <- function(data,
+                        var_name,
+                        tol = NULL,
+                        robust = FALSE,
+                        family = "AUTO",
+                        verbose = TRUE) {
+
+  complete_cases <- complete.cases(data)
+
+  if(sum(complete_cases) == 0) {
+    if (verbose) {
+      warning(sprintf("Imputation not performed. No complete cases for variable: %s", var_name))
+    }
+    return(NULL)
+  }
+
+  # Check for sufficient degrees of freedom
+  if (sum(complete_cases) <= ncol(data)) {
+    if (verbose) {
+      warning(sprintf("Stopping missing value prediction. Insufficient degrees of freedom for variable: %s", var_name))
+    }
+    return(NULL)
+  }
+
+  # Check for one unique value
+  if (length(unique(data[[var_name]][complete_cases])) == 1) {
+    if (verbose) {
+      warning(sprintf("Stopping missing value prediction. Only one unique value for variable: %s", var_name))
+    }
+    return(NULL)
+  }
+
+  # Determine the model type based on the family argument
+  if (family == "AUTO") {
+    if (is.numeric(data[[var_name]])) {
+      model_type <- "gaussian"
+    } else if (is.factor(data[[var_name]])) {
+      nLev <- length(levels(data[[var_name]]))
+      model_type <- if (nLev == 2) "binomial" else "multinomial"
+    }
+  } else {
+    model_type <- family
+  }
+
+  # Fit the model based on the determined type
+  model <- tryCatch({
+    if (model_type == "gaussian") {
+      if (robust) {
+        MASS::rlm(as.formula(paste(var_name, "~ .")), data = data[complete_cases,])
+      } else {
+        stats::lm(as.formula(paste(var_name, "~ .")), data = data[complete_cases,])
+      }
+    } else if (model_type == "binomial") {
+      if (robust) {
+        robustbase::glmrob(as.formula(paste(var_name, "~ .")), data = data[complete_cases,],
+                           family = binomial)
+      } else {
+        stats::glm(as.formula(paste(var_name, "~ .")), data = data[complete_cases,],
+                   family = binomial)
+      }
+    } else if (model_type == "multinomial") {
+      nnet::multinom(as.formula(paste(var_name, "~ .")), data = data[complete_cases,])
+
+    } else if (model_type == "beta") {
+      betareg::betareg(as.formula(paste(var_name, "~ .")), data = data[complete_cases,])
+
+    } else {
+      stats::glm(as.formula(paste(var_name, "~ .")), data = data[complete_cases,],
+                 family = model_type)
+    }
+  }, error = function(e) {
+    if (verbose) {
+      warning(sprintf("Model fitting failed for variable: %s. Error: %s", var_name, e$message))
+    }
+    return(NULL)
+  })
+
+  if (is.null(model)) return(NULL)
+
+  # Predict values for the whole dataset
+  predicted <- tryCatch({
+    stats::predict(model, newdata = data,
+                   type = if (model_type == "gaussian") "response" else "probs")
+  }, error = function(e) {
+    if (verbose) {
+      warning(sprintf("Prediction failed for variable: %s. Error: %s", var_name, e$message))
+    }
+    return(NULL)
+  })
+
+  # residual standard deviation using sigma() for Gaussian models
+  residual_sd <- if (model_type == "gaussian") {
+    sigma(model)
+  } else {
+    #  in other models, apply a tolerance to the residual standard deviation
+    residuals <- residuals(model)
+    tol * sqrt(sum(residuals^2) / df.residual(model))
+  }
+
+  missing_indices <- which(is.na(data[[var_name]]))
+
+  # Add stochastic noise to predictions
+  if (length(missing_indices) > 0) {
+    predicted[missing_indices] <- predicted[missing_indices] +
+      rnorm(length(missing_indices), mean = 0, sd = residual_sd)
+  }
+
+  # Return the predicted values with stochastic imputation
   return(predicted)
 }
 
@@ -253,11 +371,11 @@ na.col.add <- function(x) {
 # The correction assumes that for m variables, there will
 # be m(m-1) tests.
 
-use.sidak <- function(p_value,nvars){
+use.sidak <- function(p_value,n_vars){
 
   stopifnot(is.numeric(p_value))
 
-  adj_sidak <- (1 - (1 - p_value)^(nvars*(nvars-1)))
+  adj_sidak <- (1 - (1 - p_value)^(n_vars*(n_vars-1)))
 
   return(adj_sidak)
 }

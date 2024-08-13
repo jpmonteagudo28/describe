@@ -17,6 +17,7 @@
 #' @keywords internal
 #'
 #' @examples
+#' \donttest
 #' set.seed(123)
 #' data <- data.frame(x1 = rnorm(100),x2 = rnorm(100),y = rnorm(100))
 #'

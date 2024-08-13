@@ -197,10 +197,7 @@ pmean.match <- function(data,
 }
 
 #' @description
-#' Imputation of missing values through conditional mean ipmutation (CMI). This ipmutation
-#' method replaces missing values with the expected value of the missing variable, given
-#' other variables in the dataset. Predictions of conditional mean performed using specific
-#' regression models.
+#' Imputation of missing values through conditional mean imputation (CMI).
 #'
 #' @param data a numeric matrix or data frame of at least 2 columns.
 #' @param family the distribution family of your observations. The family arguments defaults
@@ -215,7 +212,11 @@ pmean.match <- function(data,
 #' @export
 #'
 #'
-#' @details CMI is a univariate imputation method that leverages the relationship between
+#' @details
+#' This method replaces missing values with the expected value of the missing variable, given
+#' other variables in the dataset. Predictions of conditional mean performed using specific
+#' regression models.
+#' CMI is a univariate imputation method that leverages the relationship between
 #' variables in the data to make informed predictions about missing values. Although
 #' this method reduces bias and aims to maintain the relationship among variables, it
 #' will yield residuals with less variation than the original data.
@@ -278,3 +279,69 @@ cm.impute <- function(data,
   return(dat2impute)
 }
 
+#' @description
+#' Stochastic regression imputation with custom regression variance
+#'
+#' @details
+#' This method corrects the lack of variability in conditional mean imputation (CMI) by adding
+#' an error term to the conditional mean calculation. This method is more effective than CMI in reducing
+#' bias in the imputed values. Work well with MCAR and MAR data.
+#'
+#' @param data a numeric matrix or data frame of at least 2 columns.
+#' @param family the distribution family of your observations. The family arguments defaults
+#' to 'AUTO'; and it will automatically select a distribution family (gaussian, binomial, multinomial) based on the type of
+#' variable (numeric or factor). The distribution family dictates the regression model used (lm,glm, multinom).
+#' However, the user can change the family argument to match his response variable distribution
+#' and the function will adapt to this input by using the generalized linear model or beta regression.
+#' @param robust logical indicated whether to use robust estimation methods or ignore them. If set to 'TRUE',
+#' the function will make use of robust linear and generalized linear models to make its prediction.
+#' @param char_to_factor transform character variable to unordered factor variable
+#' @param verbose verbose error handling
+#' @return a matrix or data frame containing the imputed dataset.
+#' @export
+streg.impute <- function(data,
+                          family = "AUTO",
+                          tol = NULL,
+                          robust = FALSE,
+                          char_to_factor = FALSE,
+                          verbose = FALSE){
+
+  if (!is.data.frame(data)) {
+    data <- as.data.frame(data)
+  }
+
+  stopifnot(is.character(family),
+            is.numeric(tol),
+            is.logical(robust),
+            is.logical(char_to_factor))
+
+  if (char_to_factor) {
+    data <- char2factor(data)
+    warning("Converted character variable to unordered factor variable")
+  }
+
+  # find where NA's located
+  na_where <- lapply(data, is.na)
+
+  # save copy of OG data for imputation
+  dat2impute <- data
+
+  # Substitute missing values w/ obs_vals
+  for (var in names(data)) {
+    na_index <- which(na_where[[var]])
+
+    if (length(na_index) > 0) {
+      pred_val <-
+        stochastic.predict(dat2impute, var, tol = tol,robust = robust, family = family)
+
+      if (!is.null(pred_val)) {
+        # Replace only the missing values with their corresponding predictions
+        dat2impute[[var]][na_index] <- pred_val[na_index]
+      }
+    }
+  }
+  #Final check for any remaining missing values
+  check.missing(data,dat2impute, verbose = verbose)
+
+  return(dat2impute)
+}
