@@ -23,53 +23,13 @@ char2factor <- function(data) {
   return(data)
 }
 
-#---------------------------------------#
-# Create correlated, synthetic normal variables
-# with user-specified probability of missing values
-gen.syn.vars <- function(len,
-                         rho,
-                         sigma,
-                         n_vars,
-                         na_prob = 0) {
-
-  stopifnot(is.numeric(len),
-            is.numeric(rho),
-            is.numeric(sigma),
-            rho >= -1,
-            rho <= 1,
-            length(rho) %in% c(1, (n_vars * (n_vars - 1)) / 2),
-            length(sigma) == n_vars,
-            n_vars >= 2,
-            na_prob >= -1,
-            na_prob <= 1)
-
-  n <- len
-  A <- diag(n_vars)
-  A[upper.tri(A)]<- rho
-  A[lower.tri(A)] <- rho
-  L <- chol(A)
-  eps <- diag(sigma, nrow = n_vars)
-
-  lambda <- t(L) %*% eps
-  x <- matrix(rnorm(n * n_vars), nrow = n, ncol = n_vars)
-  z <- x %*% lambda
-  z <- as.data.frame(z)
-
-  # Introduce NAs based on na_prob
-  if (na_prob > 0) {
-    na_mask <- matrix(runif(n * n_vars) < na_prob, n, n_vars)
-    z[na_mask] <- NA
-  }
-
-  return(z)
-}
-
 #----------------------------------------------#
 # Generate nth samples for multiple imputation
 gen.nth.samples <- function(data,
                             iters = 3,
                             seed = NULL,
                             na.rm = TRUE){
+
   stopifnot(is.data.frame(data) || is.matrix(data),
             is.numeric(iters),
             is.logical(na.rm))
@@ -84,7 +44,7 @@ gen.nth.samples <- function(data,
 
     if(nrow(complete_data) == 0) {
       warning("No complete cases found.
-              Using original data for imputation.")
+              Using original data for sample generation.")
       comp_data <- data
     }
   } else {
@@ -316,7 +276,7 @@ stochastic.predict <- function(data,
 
   if (is.null(model)) return(NULL)
 
-  # Predict values for the whole dataset
+  # Predict values for the variable or dataset
   predicted <- tryCatch({
     stats::predict(model, newdata = data,
                    type = if (model_type == "gaussian") "response" else "probs")
@@ -373,7 +333,8 @@ na.col.add <- function(x) {
 
 use.sidak <- function(p_value,n_vars){
 
-  stopifnot(is.numeric(p_value))
+  stopifnot(is.numeric(p_value),
+            is.numeric(n_vars))
 
   adj_sidak <- (1 - (1 - p_value)^(n_vars*(n_vars-1)))
 

@@ -115,7 +115,7 @@ check.MAR <- function(data,
       glm_summ <- summary(glm(data$is_na ~ data[, i] + data[, j],
                               data, family = binomial))
 
-      p_value <- glm_summ$coefficients[3, 4]
+      p_value <- glm_summ$coefficients[2, 4]
 
 
       adj_p_value <- use.sidak(p_value, nvars)
@@ -126,6 +126,7 @@ check.MAR <- function(data,
   }
   result <- round(result, digits)
 
+  cat("Adjusted p-values of pair-wise comparisons \n")
   return(result)
 }
 
@@ -218,6 +219,16 @@ check.MCAR <- function(data,
   mu <- mu[keep]
   sigma <- grand_cov[keep, keep, drop = FALSE]
 
+  # Check dimensions
+  if (length(mu) != ncol(sigma)) {
+    stop("Dimension mismatch between mu and sigma.")
+  }
+
+  # Check for invertibility of sigma
+  if (det(sigma) == 0) {
+    stop("Sigma is singular and cannot be inverted.")
+  }
+
   d2[i] <- nrow(group_data) * (t(mu) %*% solve(sigma) %*% mu)
 }
 
@@ -241,6 +252,7 @@ p_value <- tryCatch(
     p.value = round(p_value, digits = digits),
     missing.patterns = max(na_pattern)
   )
+  cat("Little's test of MCAR\n")
 
   return(result)
 }

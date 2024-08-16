@@ -1,5 +1,5 @@
 #> Impute values by randomly selecting data points from recorded observations
-#> Use with categorical data to match observations on all categories
+#> Use with stratification accross categorical variables
 #> Reasonable imputation method for MCAR and MAR
 #>
 hotdeck.impute <- function(data,
@@ -99,7 +99,7 @@ coldeck.impute <- function(x,
 #' Currently k defaults to 3 but can be changed.
 #' @param seed numeric vector used for reproducible results. Used to sample the same predicted value over time.
 #'
-#' @return a matrix or fata frame containing the imputed dataset.
+#' @return a matrix or data frame containing the imputed dataset.
 #' @export
 #'
 #'
@@ -293,13 +293,25 @@ cm.impute <- function(data,
 #' variable (numeric or factor). The distribution family dictates the regression model used (lm,glm, multinom).
 #' However, the user can change the family argument to match his response variable distribution
 #' and the function will adapt to this input by using the generalized linear model or beta regression.
+#' @param tol tolerance,a numeric vector of length 1 used as multiplicative factor to standard deviation for generalized linear models.
+#' As the sample size increases, the tolerance value should be decreased to represent the decreasing variability of the sample estimate.
 #' @param robust logical indicated whether to use robust estimation methods or ignore them. If set to 'TRUE',
 #' the function will make use of robust linear and generalized linear models to make its prediction.
 #' @param char_to_factor transform character variable to unordered factor variable
 #' @param verbose verbose error handling
+#'
 #' @return a matrix or data frame containing the imputed dataset.
 #' @export
-streg.impute <- function(data,
+#'
+#' @examples
+#' set.seed(123)
+# data <- data.frame(x1 = rnorm(100),x2 = rnorm(100),y = rnorm(100))
+#'
+#' Introduce missing values
+#' data$x1[sample(1:100, 13)] <- NA
+#' stoc.impute(data,tol = 1e-3)
+#'
+stoc.impute <- function(data,
                           family = "AUTO",
                           tol = NULL,
                           robust = FALSE,

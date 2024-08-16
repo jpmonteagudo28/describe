@@ -22,13 +22,15 @@ Goal: To provide estimates of central tendency for different distributions and s
 IMPUTATION CHECKLIST
 
 1. regression models defined for normal and non-normal data and classification models (lm,rlm,glm)
-	
+
 	a. MASS package: rlm - robust
-	b. 
+	b.
 
 2. Check if predictive mean matching can be used for singular imputation
 
 3. Check if predictive mean matching needs additional checks and how it's creating its regression models
+
+4. Add data augmentation method to check.mar function when perfect separation happens. As a result, glm fit algorithm did not converge.(fimd, 3.6)
 
 
 
