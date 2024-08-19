@@ -2,24 +2,31 @@
 % Please edit documentation in R/geometric_central.R
 \name{geom.sd}
 \alias{geom.sd}
-\title{Calculate the geometric standard deviation (GSD) of the geometric mean.}
+\title{Calculate the geometric standard deviation (GSD)}
 \usage{
-geom.sd(x, ..., na.rm = FALSE)
+geom.sd(x, impute_method = NULL, k = NULL, na.rm = FALSE, ...)
 }
 \arguments{
 \item{x}{a numeric vector, matrix or data frame}
 
-\item{...}{additional parameters to be passed to 'geom.mean()'}
-
 \item{na.rm}{indicate whether or not to remove NAs}
+
+\item{...}{additional parameters to be passed to 'geom.mean()'}
 }
 \value{
 a numeric vector of length equal or greater than 1L.
 }
 \description{
-The GSD is a dimensionless (unitless) multiplicative factor. It describes
-the range from the mean divided by GSD to the mean multiplied by GSD. Because of
+The GSD is  the standard deviation of the geometric mean for of
+a set of non-negative,non-zero observations.The GSD is a dimensionless
+(unitless) multiplicative factor. It describes the range from the mean
+divided by GSD to the mean multiplied by GSD. Because of
 its multiplicative nature, the GSD cannot be added/subtracted from the mean.
+}
+\details{
+In order to calculate the GSD, we use imputation methods to deal with missingness
+and preserve the structure of the matrix or data frame. Note that in some cases,
+this method might lead to an artificial increase or decrease in the association between  outcome and original independent variables.
 }
 \examples{
 x <- matrix(rlnorm(60,1,1.4), ncol = 4)

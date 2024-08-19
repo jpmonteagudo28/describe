@@ -40,7 +40,7 @@ gen.nth.samples <- function(data,
 
 
   if(na.rm){
-    complete_data <- data[complete.cases(data), ]
+    complete_data <- data[stats::complete.cases(data), ]
 
     if(nrow(complete_data) == 0) {
       warning("No complete cases found.
@@ -107,11 +107,11 @@ gen.predict <- function(data,
                         family = "AUTO",
                         verbose = TRUE) {
 
-  complete_cases <- complete.cases(data)
+  complete_cases <- stats::complete.cases(data)
 
   if(sum(complete_cases) == 0) {
     if (verbose) {
-      warning(sprintf("Imputation not performed. No complete cases for variable: %s", varname))
+      warning(sprintf("Imputation not performed. No complete cases for variable: %s", var_name))
     }
     return(NULL)
   }
@@ -119,7 +119,7 @@ gen.predict <- function(data,
   # Check for sufficient degrees of freedom
   if (sum(complete_cases) <= ncol(data)) {
     if (verbose) {
-      warning(sprintf("Stopping missing value prediction. Insufficient degrees of freedom for variable: %s", varname))
+      warning(sprintf("Stopping missing value prediction. Insufficient degrees of freedom for variable: %s", var_name))
     }
     return(NULL)
   }
@@ -127,7 +127,7 @@ gen.predict <- function(data,
   # Check for one unique value
   if (length(unique(data[[var_name]][complete_cases])) == 1) {
     if (verbose) {
-      warning(sprintf("Stopping missing value prediction. Only one unique value for variable: %s", varname))
+      warning(sprintf("Stopping missing value prediction. Only one unique value for variable: %s", var_name))
     }
     return(NULL)
   }
@@ -152,26 +152,26 @@ gen.predict <- function(data,
   model <- tryCatch({
     if (model_type == "gaussian") {
       if (robust) {
-        MASS::rlm(as.formula(paste(var_name, "~ .")), data = data[complete_cases,])
+        MASS::rlm(stats::as.formula(paste(var_name, "~ .")), data = data[complete_cases,])
       } else {
-        stats::lm(as.formula(paste(var_name, "~ .")), data = data[complete_cases,])
+        stats::lm(stats::as.formula(paste(var_name, "~ .")), data = data[complete_cases,])
       }
     } else if (model_type == "binomial") {
       if (robust) {
-        robustbase::glmrob(as.formula(paste(var_name, "~ .")), data = data[complete_cases,],
-                           family = binomial)
+        robustbase::glmrob(stats::as.formula(paste(var_name, "~ .")), data = data[complete_cases,],
+                           family = "binomial")
       } else {
-        stats::glm(as.formula(paste(var_name, "~ .")), data = data[complete_cases,],
-                   family = binomial)
+        stats::glm(stats::as.formula(paste(var_name, "~ .")), data = data[complete_cases,],
+                   family = "binomial")
       }
     } else if(model_type == "multinomial") {
-      nnet::multinom(as.formula(paste(var_name, "~ .")), data = data[complete_cases,])
+      nnet::multinom(stats::as.formula(paste(var_name, "~ .")), data = data[complete_cases,])
 
     } else if (model_type == "beta") {
-      betareg::betareg(as.formula(paste(var_name, "~ .")), data = data[complete_cases,])
+      betareg::betareg(stats::as.formula(paste(var_name, "~ .")), data = data[complete_cases,])
 
     } else {
-      stats::glm(as.formula(paste(var_name, "~ .")), data = data[complete_cases,],
+      stats::glm(stats::as.formula(paste(var_name, "~ .")), data = data[complete_cases,],
                  family = model_type)
     }
   }, error = function(e) {
@@ -204,7 +204,7 @@ stochastic.predict <- function(data,
                         family = "AUTO",
                         verbose = TRUE) {
 
-  complete_cases <- complete.cases(data)
+  complete_cases <- stats::complete.cases(data)
 
   if(sum(complete_cases) == 0) {
     if (verbose) {
@@ -245,26 +245,26 @@ stochastic.predict <- function(data,
   model <- tryCatch({
     if (model_type == "gaussian") {
       if (robust) {
-        MASS::rlm(as.formula(paste(var_name, "~ .")), data = data[complete_cases,])
+        MASS::rlm(stats::as.formula(paste(var_name, "~ .")), data = data[complete_cases,])
       } else {
-        stats::lm(as.formula(paste(var_name, "~ .")), data = data[complete_cases,])
+        stats::lm(stats::as.formula(paste(var_name, "~ .")), data = data[complete_cases,])
       }
     } else if (model_type == "binomial") {
       if (robust) {
-        robustbase::glmrob(as.formula(paste(var_name, "~ .")), data = data[complete_cases,],
-                           family = binomial)
+        robustbase::glmrob(stats::as.formula(paste(var_name, "~ .")), data = data[complete_cases,],
+                           family = "binomial")
       } else {
-        stats::glm(as.formula(paste(var_name, "~ .")), data = data[complete_cases,],
-                   family = binomial)
+        stats::glm(stats::as.formula(paste(var_name, "~ .")), data = data[complete_cases,],
+                   family = "binomial")
       }
     } else if (model_type == "multinomial") {
-      nnet::multinom(as.formula(paste(var_name, "~ .")), data = data[complete_cases,])
+      nnet::multinom(stats::as.formula(paste(var_name, "~ .")), data = data[complete_cases,])
 
     } else if (model_type == "beta") {
-      betareg::betareg(as.formula(paste(var_name, "~ .")), data = data[complete_cases,])
+      betareg::betareg(stats::as.formula(paste(var_name, "~ .")), data = data[complete_cases,])
 
     } else {
-      stats::glm(as.formula(paste(var_name, "~ .")), data = data[complete_cases,],
+      stats::glm(stats::as.formula(paste(var_name, "~ .")), data = data[complete_cases,],
                  family = model_type)
     }
   }, error = function(e) {
@@ -289,11 +289,11 @@ stochastic.predict <- function(data,
 
   # residual standard deviation using sigma() for Gaussian models
   residual_sd <- if (model_type == "gaussian") {
-    sigma(model)
+    stats::sigma(model)
   } else {
     #  in other models, apply a tolerance to the residual standard deviation
-    residuals <- residuals(model)
-    tol * sqrt(sum(residuals^2) / df.residual(model))
+    residuals <- stats::residuals(model)
+    tol * sqrt(sum(residuals^2) / stats::df.residual(model))
   }
 
   missing_indices <- which(is.na(data[[var_name]]))
@@ -301,7 +301,7 @@ stochastic.predict <- function(data,
   # Add stochastic noise to predictions
   if (length(missing_indices) > 0) {
     predicted[missing_indices] <- predicted[missing_indices] +
-      rnorm(length(missing_indices), mean = 0, sd = residual_sd)
+      stats::rnorm(length(missing_indices), mean = 0, sd = residual_sd)
   }
 
   # Return the predicted values with stochastic imputation

@@ -1,7 +1,7 @@
 #> Impute values by randomly selecting data points from recorded observations
 #> Use with stratification accross categorical variables
 #> Reasonable imputation method for MCAR and MAR
-#>
+
 hotdeck.impute <- function(data,
                            method = "deterministic",
                            k = NULL,
@@ -13,7 +13,7 @@ hotdeck.impute <- function(data,
                   is.logical(na.rm))
 
         if(na.rm){
-          complete_data <- data[complete.cases(data),]
+          complete_data <- data[stats::complete.cases(data),]
 
           if(nrow(complete_data) == 0) {
             warning("No complete cases found.
@@ -65,7 +65,7 @@ hotdeck.impute <- function(data,
         return(data)
 }
 
-coldeck.impute <- function(x,
+coldeck.impute <- function(data,
                            ext_data = NULL,
                            method = "deterministic",
                            k = NULL,
@@ -80,8 +80,11 @@ coldeck.impute <- function(x,
   )
 
 }
+#' @title
+#' Imputation of missing values through predictive mean matching
+#'
 #' @description
-#' Imputation of missing values through predictive mean matching. Predictive mean matching (PMM)
+#' Predictive mean matching (PMM)
 #' is an imputation technique introduced by  Donald . Rubin in 1987. This imputation method aims
 #' to maintain the natural variability of the data and avoid implausible imputations that can
 #' occur with other univariate imputation methods.
@@ -117,14 +120,10 @@ coldeck.impute <- function(x,
 #'
 #' @examples
 #' set.seed(123)
-#' data <- data.frame(x1 = rnorm(100),x2 = rnorm(100),y = rnorm(100))
-#'
-#' Introduce missing values
+#' data <- data.frame(x1 = stats::rnorm(100),x2 = stats::rnorm(100),y = stats::rnorm(100))
 #' data$x1[sample(1:100, 20)] <- NA
 #' data$x2[sample(1:100, 15)] <- NA
 #' data$y[sample(1:100, 10)] <- NA
-
-#' Appending factor variable and using a robust multinomial model
 #' fact_dat <- data.frame(data, c = gl(5,20))
 #' pmean.match(fact_dat, robust = TRUE)
 #'
@@ -196,7 +195,7 @@ pmean.match <- function(data,
   return(dat2impute)
 }
 
-#' @description
+#' @title
 #' Imputation of missing values through conditional mean imputation (CMI).
 #'
 #' @param data a numeric matrix or data frame of at least 2 columns.
@@ -207,12 +206,14 @@ pmean.match <- function(data,
 #' and the function will adapt to this input by using the generalized linear model or beta regression.
 #' @param robust logical indicated whether to use robust estimation methods or ignore them. If set to 'TRUE',
 #' the function will make use of robust linear and generalized linear models to make its prediction.
+#' @param char_to_factor transform character variable to unordered factor variable
+#' @param verbose verbose error handling
 #'
 #' @return a matrix or data frame containing the imputed dataset.
 #' @export
 #'
 #'
-#' @details
+#' @description
 #' This method replaces missing values with the expected value of the missing variable, given
 #' other variables in the dataset. Predictions of conditional mean performed using specific
 #' regression models.
@@ -229,11 +230,9 @@ pmean.match <- function(data,
 #'
 #' @examples
 #' set.seed(123)
-# data <- data.frame(x1 = rnorm(100),x2 = rnorm(100),y = rnorm(100))
-#'
-#' Introduce missing values
-#' data$x1[sample(1:100, 13)] <- NA
-#' cm.impute(data = data)
+#' data <- data.frame(x1 = c(stats::rnorm(87),rep(NA,13)),
+#' x2 = stats::rnorm(100),y = stats::rnorm(100))
+#' cm.impute(data)
 
 cm.impute <- function(data,
                       family = "AUTO",
@@ -279,10 +278,10 @@ cm.impute <- function(data,
   return(dat2impute)
 }
 
-#' @description
+#' @title
 #' Stochastic regression imputation with custom regression variance
 #'
-#' @details
+#' @description
 #' This method corrects the lack of variability in conditional mean imputation (CMI) by adding
 #' an error term to the conditional mean calculation. This method is more effective than CMI in reducing
 #' bias in the imputed values. Work well with MCAR and MAR data.
@@ -304,13 +303,11 @@ cm.impute <- function(data,
 #' @export
 #'
 #' @examples
-#' set.seed(123)
-# data <- data.frame(x1 = rnorm(100),x2 = rnorm(100),y = rnorm(100))
-#'
-#' Introduce missing values
-#' data$x1[sample(1:100, 13)] <- NA
+#  set.seed(123)
+#' data <- data.frame(x1 = c(stats::rnorm(87),rep(NA,13)),
+#' x2 = stats::rnorm(100),y = stats::rnorm(100))
 #' stoc.impute(data,tol = 1e-3)
-#'
+
 stoc.impute <- function(data,
                           family = "AUTO",
                           tol = NULL,

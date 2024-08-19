@@ -151,8 +151,7 @@ geom.mean <- function(x, ..., na.rm = FALSE) {
 #' @details
 #' In order to calculate the GSD, we use imputation methods to deal with missingness
 #' and preserve the structure of the matrix or data frame. Note that in some cases,
-#' this method might lead to an artificial increase or decrease in the asso-
-#' ciation between  outcome and original independent variables.
+#' this method might lead to an artificial increase or decrease in the association between  outcome and original independent variables.
 #'
 #'
 #' @return a numeric vector of length equal or greater than 1L.

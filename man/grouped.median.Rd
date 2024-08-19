@@ -2,7 +2,7 @@
 % Please edit documentation in R/grouped_central.R
 \name{grouped.median}
 \alias{grouped.median}
-\title{Calculate median of grouped data using frequency, either percent or counts}
+\title{Calculate median of grouped data using frequency, either percent or counts.}
 \usage{
 grouped.median(x, freq, freq_format = "count", na.rm = FALSE)
 }
@@ -20,7 +20,7 @@ converted to percent}
 a numeric vector of length 1L
 }
 \description{
-Calculate median of grouped data using frequency, either percent or counts
+Calculate median of grouped data using frequency, either percent or counts.
 }
 \examples{
 age <- c("0-4","5-9","10-14",

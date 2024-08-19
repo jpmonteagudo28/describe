@@ -18,7 +18,7 @@
 harm.mean <- function(x, na.rm = FALSE,...) {
   if (is.data.frame(x) || is.matrix(x)) {
     if (na.rm) {
-      x <- apply(x, 2, function(column) na.omit(column))
+      x <- apply(x, 2, function(column) stats::na.omit(column))
     }
     harm_mean <- apply(x, 2, function(column) {
       n <- length(column)

@@ -1,7 +1,7 @@
 #-----------------------------------------------#
-# Generate correlated, synthetic normal variables
-# with user-specified probability of MCAR
-# under the Bernoulli distribution.
+#' @title
+#' Generate correlated, synthetic normal variables with user-specified probability of MCAR.
+#' @export
 gen.mcar <- function(len,
                      rho,
                      sigma,
@@ -27,13 +27,12 @@ gen.mcar <- function(len,
   eps <- diag(sigma, nrow = n_vars)
 
   lambda <- L %*% eps
-  x <- matrix(rnorm(n * n_vars), nrow = n, ncol = n_vars)
+  x <- matrix(stats::rnorm(n * n_vars), nrow = n, ncol = n_vars)
   z <- x %*% lambda
   z <- as.data.frame(z)
 
-  # Introduce NAs based on na_prob
   if (na_prob > 0) {
-    na_mask <- matrix(rbinom(n * n_vars,1,na_prob) == 1, n, n_vars)
+    na_mask <- matrix(stats::rbinom(n * n_vars,1,na_prob) == 1, n, n_vars)
     z[na_mask] <- NA
   }
 
@@ -41,8 +40,8 @@ gen.mcar <- function(len,
 }
 
 #-----------------------------------------------#
-# Generate correlated, synthetic normal variables
-# with user-specified probability of MAR
+#' @title
+#' Generate correlated, synthetic normal variables with user-specified probability of MAR
 gen.mar <- function(len,
                     rho,
                     sigma,
@@ -60,10 +59,31 @@ gen.mar <- function(len,
 
 
 #-------------------------------------------------#
-# Transform non-missing data to missing values
-# with user-specified probability of MCAR
+#' @title
+#'  Transform non-missing data to missing values with user-specified probability of MCAR
+#'
+#' @description
+#'  Transform a complete case dataset according to the MCAR mechanism.The MCAR
+#'  mechanism assumes that the probability of missingness is the same for all cases,
+#'  and therefore,the missing data are not related to the observed data. `transform.mcar`
+#'  uses the binomial distribution to generate NA  an index of possible NA values that will
+#'  replace a percentage of data points in the input.
+#'
+#' @param input data to transform using MCAR mechanism
+#' @param na_prob desired probability of NA count defined as the probability of success
+#' in a Bernoulli trial.
+#'
+#' @return a data frame or matrix containing NAs
+#' @export
+#'
+#'
+#' @examples
+#' set.seed(123)
+#' data <- data.frame(x1 = stats::rnorm(100),x2 = stats::rnorm(100),y = stats::rnorm(100))
+#' mcar.transform(data,na_prob = .25)
+#'
 
-transform.mcar <- function(input,na_prob){
+mcar.transform <- function(input,na_prob){
 
   if(!is.data.frame(input) && !is.matrix(input)){
     input <- as.matrix(input)
@@ -77,7 +97,7 @@ transform.mcar <- function(input,na_prob){
   # Set threshold for max. number of NA permissible
   threshold <- 1
 
-  na_mask <- matrix(rbinom(n_rows * n_cols,1,na_prob) == 1, n_rows,n_cols)
+  na_mask <- matrix(stats::rbinom(n_rows * n_cols,1,na_prob) == 1, n_rows,n_cols)
   output[na_mask] <- NA
 
   col_na_risk <- apply(output, 2, function(col) sum(is.na(col)) >= (n_cols - threshold))
@@ -101,19 +121,36 @@ transform.mcar <- function(input,na_prob){
 
 
 #-------------------------------------------------#
-#' @description Transform non-missing data to missing values
+#' @title Transform non-missing data to missing values
 #' with user-specified probability of MAR
 #'
-#' @details
+#' @description
 #' Transform a complete case dataset according to the MAR mechanism.The MAR
 #' mechanism assumes that the probability of missingness in a variable depends
 #' on the observed data but not on the missing data itself. This function introduces
 #' missing values in selected features of a dataset, with the missing values determined
 #' by the values of the causative (target) feature.
 #'
+#' @param input data to transform using MAR mechanism
+#' @param target variable to be used as causative feature
+#' @param features variables to which NA values are introduced using a causative feature
+#' @param na_rate proportion of missing values to be added to data
+#'
+#' @return a matrix or data frame containing NAs
+#' @export
+#'
+#'
+#' @examples
+#' set.seed(123)
+#' data <- gen.mcar(100,rho = c(.15,.25,.12,.45,.34,.54),sigma = c(1,2,1,2),n_vars = 4, na_prob = 0)
+#'
+#' mar.transform(data,"V1",c("V2","V3"), na_rate = .25)
 #'
 
-transform.mar <- function(input,target,features, na_prob){
+mar.transform <- function(input,
+                          target,
+                          features,
+                          na_rate){
 
   if(!is.data.frame(input) && !is.matrix(input)){
     stop("Input must be a data frame or matrix")
@@ -125,15 +162,15 @@ transform.mar <- function(input,target,features, na_prob){
   target_var <- subset_output[,target]
 
 
-  n_rows <- nrow(subset_output)
+  n_rows <- nrow(output)
   n_cols <- ncol(subset_output)
   n_feat <- length(features)
 
   # Total number of NAs needed
-  total_na_needed <- (n_rows * n_cols * na_prob)/n_feat
+  total_na_needed <- ceiling((n_rows * n_cols * na_rate)/n_feat)
 
   if(total_na_needed > n_rows){
-    stop("NUmber of features is too low for specified na_prob")
+    stop("Number of features is too low for specified na_rate")
   }
 
   if(n_feat >= n_cols){
@@ -143,7 +180,7 @@ transform.mar <- function(input,target,features, na_prob){
   sort_index <- order(target_var)
   lowest_index <- sort_index[1:total_na_needed]
 
-  # Set threshold for max. number of NA permissible
+  # Set threshold for max. number of NA permissible computation
   threshold <- 1
 
   subset_output[lowest_index,features] <- NA
@@ -164,5 +201,68 @@ transform.mar <- function(input,target,features, na_prob){
   return(output)
 }
 #--------------------------------------------------#
-# Transform non-missing data to missing values
-# with user-specified probability MNAR.
+#' @title
+#' Transform non-missing data to missing values with user-specified probability of MNAR.
+#'
+#' @description
+#' The MNAR mechanism assumes that the probability and cause of missingness are unknown to us and lie
+#' in the unobserved data. Under this mechanism we generate missing values by looking at each
+#' variable's lowest values and replace them with NA.
+#'
+#' @param input data to transform using MAR mechanism
+#' @param target variable to be used as causative feature
+#' @param features variables to which NA values are introduced using a causative feature
+#' @param na_rate proportion of missing values to be added to data
+#'
+#' @return a matrix or data frame containing NAs
+#' @export
+#'
+#' @examples
+#' set.seed(123)
+#' data <- gen.mcar(100,rho = c(.15,.25,.12,.45,.34,.54),sigma = c(1,2,1,2),n_vars = 4, na_prob = 0)
+#'
+#' mnar.transform(data,"V1",c("V2","V3"), na_rate = .25)
+
+mnar.transform <- function(input,
+                           target,
+                           features,
+                           na_rate){
+
+  if(!is.data.frame(input) && !is.matrix(input)){
+    stop("Input must be a data frame or matrix")
+  }
+
+  # Create copy of data to output and subset to variables of interest
+  output <- as.matrix(input)
+  subset_output <- as.matrix(output[,features])
+
+
+
+  n_rows <- nrow(output)
+  n_cols <- ncol(output)
+  n_feat <- length(features)
+
+  # Total number of NAs needed
+  total_na_needed <- ceiling((n_rows * n_cols * na_rate)/n_feat)
+
+  if(total_na_needed > n_rows){
+    stop("Number of features is too low for specified na_rate")
+  }
+
+  if(n_feat >= n_cols){
+    stop("Number of features exceeds current number of columns in data")
+  }
+
+  for(i in features){
+
+    feature_col <- subset_output[,i]
+
+  sorted_index <- order(feature_col)
+  lowest_index <- sorted_index[1:total_na_needed]
+
+  output[lowest_index,i] <- NA
+  }
+
+  output <- as.data.frame(output)
+  return(output)
+}

@@ -5,9 +5,9 @@
 #>
 sampler <- function(data,
                     iters,
-                    burn_in = iters*.1,
+                    burn_in = NULL
                     ){
-
+return(NULL)
 }
 
 

@@ -2,22 +2,24 @@
 % Please edit documentation in R/geometric_central.R
 \name{geom.var}
 \alias{geom.var}
-\title{Calculate the geometric variance of a set of observations.}
+\title{Calculate the geometric variance of a set of observations of non-negative,
+non-zero observations.}
 \usage{
-geom.var(x, ..., na.rm = FALSE)
+geom.var(x, impute_method = NULL, k = NULL, na.rm = FALSE, ...)
 }
 \arguments{
 \item{x}{a numeric vector, matrix or data frame}
 
-\item{...}{additional parameters to be passed to 'geom.mean()'}
-
 \item{na.rm}{indicate whether or not to remove NAs}
+
+\item{...}{additional parameters to be passed to 'geom.mean()'}
 }
 \value{
 a numeric vector of length equal or greater than 1L.
 }
 \description{
-Calculate the geometric variance of a set of observations.
+Calculate the geometric variance of a set of observations of non-negative,
+non-zero observations.
 }
 \examples{
 x <- matrix(rlnorm(60,1,1.4), ncol = 4)

@@ -1,27 +1,24 @@
-#' @description
+#' @title
 #' Check percent of missing values in data frame or matrix pre and post-processing
 #'
 #' @param data data frame or matrix prior to processing
 #' @param post_data data frame or matrix after processing
-#' @verbose indicate verbose warning and error messages
+#' @param verbose indicate verbose warning and error messages
 #'
 #' @return a character vector specifying the percent of missing values after processing
 #'
-#' @details
-#' `check.missing` takes a data frame and compares the percentage of missing values
+#' @description
+#' check.missing takes a data frame and compares the percentage of missing values
 #' pre and post-processing within one imputation function. If missing values completely
 #' replaced by imputed values, the remaining percent missing should be 0, otherwise
 #' the user will see a warning indicating imputation wasn't performed or the regressors
 #' used in the model contained missing values.
 #'
-#' @keywords internal
+#' @export
 #'
 #' @examples
-#' \donttest
 #' set.seed(123)
-#' data <- data.frame(x1 = rnorm(100),x2 = rnorm(100),y = rnorm(100))
-#'
-#' Introduce missing values
+#' data <- data.frame(x1 = stats::rnorm(100),x2 = stats::rnorm(100),y = stats::rnorm(100))
 #' data$x1[sample(1:100, 20)] <- NA
 #' data$x2[sample(1:100, 15)] <- NA
 #' data$y[sample(1:100, 10)] <- NA
@@ -63,9 +60,10 @@ check.missing <- function(data, post_data = NULL, verbose = FALSE) {
   }
 }
 
-#' @description MAR check using logistic regression
+#' @title MAR check using logistic regression
 #'
-#' @details We can informally test for data missing at random (MAR) by
+#' @description
+#' We can informally test for data missing at random (MAR) by
 #' creating a binary variable that represents missing data (1) and non-missing
 #' data (0). We then perform a logistic regression using the binary variable as
 #' our target to obtain p-values. Pairwise comparisons are performed on each unique
@@ -81,18 +79,18 @@ check.missing <- function(data, post_data = NULL, verbose = FALSE) {
 #' @return a square matrix with p-values across pairwise comparisons
 #' @export
 #'
+#'
 #' @examples
 #' set.seed(123)
-#' data <- data.frame(x1 = rnorm(100),x2 = rnorm(100),y = rnorm(100))
-#'
-#' Introduce missing values
+#' data <- data.frame(x1 = stats::rnorm(100),x2 = stats::rnorm(100),y = stats::rnorm(100))
 #' data$x1[sample(1:100, 20)] <- NA
 #' data$x2[sample(1:100, 15)] <- NA
 #' data$y[sample(1:100, 10)] <- NA
 #'
-#' check.MAR(data, digits = 2)
+#' check.mar(data, digits = 2)
+#'
 
-check.MAR <- function(data,
+check.mar <- function(data,
                       digits = 3){
 
   stopifnot(is.numeric(digits))
@@ -112,8 +110,8 @@ check.MAR <- function(data,
   for (i in 1:(nvars - 1)) {
     for (j in (i + 1):nvars) {
 
-      glm_summ <- summary(glm(data$is_na ~ data[, i] + data[, j],
-                              data, family = binomial))
+      glm_summ <- summary(stats::glm(data$is_na ~ data[, i] + data[, j],
+                              data, family = "binomial"))
 
       p_value <- glm_summ$coefficients[2, 4]
 
@@ -130,10 +128,10 @@ check.MAR <- function(data,
   return(result)
 }
 
-#' @description
+#' @title
 #' Little's test for missing completely at random (MCAR)
 #'
-#' @details
+#' @description
 #' In Little's test of MCAR the data are modeled as multidimensional, multivariate normal
 #' with mean 'mu' and covariance matrix 'sigma'.
 #' The test statistic is the sum of the squared standardized differences between sub-sample
@@ -156,20 +154,25 @@ check.MAR <- function(data,
 #' \item{df}{Degrees of freedom used to compute chi-square statistic}
 #' \item{p_value}{P-value for the chi-square statistic}
 #' \item{pattern}{Unique missing data patterns found}
-#' @reference
+#'
+#' @export
+#'
+#' @references
 #' Little, R. J. A. (1988). A test of Missing Completely at Random for multivariate data with missing values. Journal of the American Statistical Association, 83, 1198-1202. https://doi.org/10.2307/2290157
 #'
 #'code is adapted from Eric Stemmler: \url{https://web.archive.org/web/20201120030409/https://stats-bayes.com/post/2020/08/14/r-function-for-little-s-test-for-data-missing-completely-at-random/}
 #' and naniar's `mcar_test`.
 #'
+#'
 #' @examples
 #' set.seed(123)
-#' data <- gen.syn.vars(100,rho = c(.8,.53,.23,-.13,.35,-.56),
-#'                      sigma = c(1,2,1,2), n_vars = 4, na_prob = .17)
-#'
-#'
-#'
-check.MCAR <- function(data,
+#' data <- data.frame(x1 = stats::rnorm(100),x2 = stats::rnorm(100),y = stats::rnorm(100))
+#' data$x1[sample(1:100, 20)] <- NA
+#' data$x2[sample(1:100, 15)] <- NA
+#' data$y[sample(1:100, 10)] <- NA
+#' check.mcar(data,digits = 3)
+
+check.mcar <- function(data,
                        digits = 3) {
 
   stopifnot(is.numeric(digits))

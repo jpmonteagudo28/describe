@@ -31,7 +31,7 @@ calculated using our best, initial guess.
 }
 \details{
 If your sample is a 1D set of points use \code{median} or \code{grouped.median} instead.
-The \code{geom.median} function is used for samples of points in 2D+ space.
+The \code{geom.median} function is used for samples of points in +2D space.
 }
 \examples{
 x <- matrix(rlnorm(60,1,1.4),ncol = 4)
