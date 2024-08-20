@@ -23,8 +23,11 @@
 #' @export
 #'
 #' @examples
+#' d <- rlnorm(60,1,1.4)
+#' geom.median(d,iters = 100)
+#'
 #' x <- matrix(rlnorm(60,1,1.4),ncol = 4)
-#' geom.median(x,iters = 500, tol = 1e-10)
+#' sapply(x,function(z) geom.median(z,iters = 500, tol = 1e-10))
 geom.median <- function(x,iters = 1000, tol = 1e-8,na.rm = FALSE){
   stopifnot(is.numeric(x),
             is.numeric(iters),
@@ -68,8 +71,11 @@ geom.median <- function(x,iters = 1000, tol = 1e-8,na.rm = FALSE){
 #' @export
 #'
 #' @examples
+#' d <- rlnorm(60,1,1.4)
+#' geom.mad(d,iters = 100)
+#'
 #' x <- matrix(rlnorm(60,1,1.4), ncol = 4)
-#' geom.mad(x,iters = 500)
+#' sapply(x,function(z) geom.mad(z,iters = 100))
 geom.mad <- function(x,
                      iters = 1000,
                      na.rm = FALSE,
@@ -124,6 +130,9 @@ geom.mad <- function(x,
 #' @examples
 #' x <- rlnorm(60,1,1.4)
 #' geom.mean(x)
+#'
+#' d <- matrix(rlnorm(60,1,1.3),ncol = 4)
+#' sapply(d,geom.mean)
 geom.mean <- function(x, ..., na.rm = FALSE) {
   if(any(x < 0, na.rm = TRUE)){
     return(NaN)
@@ -158,38 +167,29 @@ geom.mean <- function(x, ..., na.rm = FALSE) {
 #' @export
 #'
 #' @examples
+#' d <- rlnorm(60,1,1.3)
+#' geom.sd(d)
+#'
 #' x <- matrix(rlnorm(60,1,1.4), ncol = 4)
-#' geom.sd(x)
+#' sapply(x,geom.sd)
 
-geom.sd <- function(x,
-                    impute_method = NULL,
-                    k = NULL,
-                    na.rm = FALSE,
-                    ...){
+geom.sd <- function(x,...,na.rm = FALSE){
+
+  if (is.data.frame(x) || is.matrix(x)) {
+    stop("Provide a numeric vector instead of a matrix or data frame")
+  }
   if(any(x < 0, na.rm = TRUE)){
     return(NaN)
   }
-  if (is.data.frame(x) || is.matrix(x)) {
-    if (na.rm) {
-      x <- hotdeck.impute(x,
-                          method = impute_method,
-                          k = k)
-    }
-    geom_sd <- apply(x, 2, function(column) {
-      n <- length(column)
-      g_mean <- geom.mean(column)
-      g.sd <- exp(sqrt(sum((log(column/g_mean))^2) / n))
-    })
-    return(geom_sd)
-  } else {
-      if (na.rm) {
-        x <- x[!is.na(x)]
-      }
+
+  if(na.rm){
+    x <- x[!is.na(x)]
+  }
       n <- length(x)
       g_mean <- geom.mean(x)
       g.sd <- exp(sqrt(sum((log(x/g_mean))^2) / n))
+
       return(g.sd)
-    }
 }
 
 #' Calculate the geometric variance of a set of observations of non-negative,
@@ -203,38 +203,27 @@ geom.sd <- function(x,
 #' @export
 #'
 #' @examples
+#' d <- rlnorm(60,1,1.3)
+#' geom.var(d)
+#'
 #' x <- matrix(rlnorm(60,1,1.4), ncol = 4)
-#' geom.var(x)
-geom.var <- function(x,
-                     impute_method = NULL,
-                     k = NULL,
-                     na.rm = FALSE,
-                     ...){
+#' sapply(x,geom.var)
+geom.var <- function(x,...,na.rm = FALSE){
+
+  if (is.data.frame(x) || is.matrix(x)) {
+    stop("Provide a numeric vector instead of a matrix or data frame")
+  }
   if(any(x < 0, na.rm = TRUE)){
     return(NaN)
   }
-  if (is.data.frame(x) || is.matrix(x)) {
-    if (na.rm) {
-      x <- hotdeck.impute(x,
-                          method = impute_method,
-                          k = k)
-    }
-    geom_var <- apply(x, 2, function(column) {
-      n <- length(column)
-      g_mean <- geom.mean(column)
-      g.var <- exp(sum((log(column/g_mean))^2) / n)
-    })
-    return(geom_var)
 
-  } else {
-      if (na.rm) {
-      x <- x[!is.na(x)]
-    }
+  if (na.rm) {
+    x <- x[!is.na(x)]
+  }
     n <- length(x)
     g_mean <- geom.mean(x)
     g.var <- exp(sum((log(x/g_mean))^2) / n)
     return(g.var)
-  }
 }
 
 #' Calculate the number of GSD by which the raw value is above/below the
@@ -250,8 +239,11 @@ geom.var <- function(x,
 #' @export
 #'
 #' @examples
+#' d <- rlnorm(60,1,1.4)
+#' geom.zscore(d)
+#'
 #' x <- matrix(rlnorm(60,1,1.4), ncol = 4)
-#' geom.zscore(x)
+#' sapply(x,geom.zscore)
 geom.zscore <- function(x,...,na.rm = FALSE){
   if(any(x < 0, na.rm = TRUE)){
     return(NaN)

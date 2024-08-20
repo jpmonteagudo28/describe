@@ -31,4 +31,7 @@ measuring the log-normal dispersion of a log-normal distribution
 \examples{
 x <- rlnorm(60,1,1.4)
 geom.mean(x)
+
+d <- matrix(rlnorm(60,1,1.3),ncol = 4)
+sapply(d,geom.mean)
 }

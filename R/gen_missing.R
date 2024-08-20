@@ -1,7 +1,28 @@
 #-----------------------------------------------#
 #' @title
+#' Generate a data frame of any length containing any given number of NA values according to
+#' the missing completely at random mechanism.
+#'
+#' @description
 #' Generate correlated, synthetic normal variables with user-specified probability of MCAR.
+#' Specify the column length, correlation coefficient, standard deviation, number of columns
+#' and desired probability of missing values to obtain a data frame of correlated observations
+#' with missing values.
+#'
+#' @param len number of rows per column
+#' @param rho desired correlation coefficient of generated variables. The length of rho
+#' must be equal to the product of `n_vars` and half of `n_vars` minus one.
+#' @param sigma desired standard deviation for each generated variable
+#' @param n_vars total number of variables to be generated. At least two variables must be provided.
+#' @param na_prob desired probability of missingness in each variable.
+#'
+#'
+#' @return a data frame of at least 2 columns
 #' @export
+#'
+#' @examples
+#' syn_na <- gen.mcar(50,c(.25,.75,.044),c(1.1,.56,1.56),3,.47)
+#'
 gen.mcar <- function(len,
                      rho,
                      sigma,
@@ -41,7 +62,28 @@ gen.mcar <- function(len,
 
 #-----------------------------------------------#
 #' @title
-#' Generate correlated, synthetic normal variables with user-specified probability of MAR
+#' Generate a data frame of any length containing any given number of NA values according
+#' to the missing at random mechanism.
+#'
+#' @description
+#' Generate correlated, synthetic normal variables with user-specified probability of MAR.
+#' Specify the column length, correlation coefficient, standard deviation, number of columns
+#' and desired probability of missing values to obtain a data frame of correlated observations
+#' with missing values.
+#'
+#' @param len number of rows per column
+#' @param rho desired correlation coefficient of generated variables. The length of rho
+#' must be equal to the product of `n_vars` and half of `n_vars` minus one.
+#' @param sigma desired standard deviation for each generated variable
+#' @param n_vars total number of variables to be generated. At least two variables must be provided.
+#' @param na_prob desired probability of missingness in each variable.
+#'
+#'
+#' @return a data frame of at least 2 columns
+#' @export
+#'
+#' @examples
+#' syn_na <- gen.mar(50,c(.25,.75,.044),c(1.1,.56,1.56),3,.47)
 gen.mar <- function(len,
                     rho,
                     sigma,

@@ -2,10 +2,32 @@
 % Please edit documentation in R/gen_missing.R
 \name{gen.mar}
 \alias{gen.mar}
-\title{Generate correlated, synthetic normal variables with user-specified probability of MAR}
+\title{Generate a data frame of any length containing any given number of NA values according
+to the missing at random mechanism.}
 \usage{
 gen.mar(len, rho, sigma, n_vars, na_prob)
 }
+\arguments{
+\item{len}{number of rows per column}
+
+\item{rho}{desired correlation coefficient of generated variables. The length of rho
+must be equal to the product of \code{n_vars} and half of \code{n_vars} minus one.}
+
+\item{sigma}{desired standard deviation for each generated variable}
+
+\item{n_vars}{total number of variables to be generated. At least two variables must be provided.}
+
+\item{na_prob}{desired probability of missingness in each variable.}
+}
+\value{
+a data frame of at least 2 columns
+}
 \description{
-Generate correlated, synthetic normal variables with user-specified probability of MAR
+Generate correlated, synthetic normal variables with user-specified probability of MAR.
+Specify the column length, correlation coefficient, standard deviation, number of columns
+and desired probability of missing values to obtain a data frame of correlated observations
+with missing values.
+}
+\examples{
+syn_na <- gen.mar(50,c(.25,.75,.044),c(1.1,.56,1.56),3,.47)
 }

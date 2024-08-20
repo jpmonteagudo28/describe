@@ -23,6 +23,9 @@ tendency than the arithmetic mean in the presence of outliers since it tends
 to the smallest elements of a set of observations.
 }
 \examples{
+d <- rlnorm(60,1,1.4)
+harm.mean(d)
+
 x <- matrix(rlnorm(60,1,1.4),ncol = 4)
-harm.mean(x)
+sapply(x,harm.mean)
 }

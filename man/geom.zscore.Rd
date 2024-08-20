@@ -21,6 +21,9 @@ a matrix or array of z-scores of length > 1L.
 The formula here makes use of the change of base property of logarithms.
 }
 \examples{
+d <- rlnorm(60,1,1.4)
+geom.zscore(d)
+
 x <- matrix(rlnorm(60,1,1.4), ncol = 4)
-geom.zscore(x)
+sapply(x,geom.zscore)
 }

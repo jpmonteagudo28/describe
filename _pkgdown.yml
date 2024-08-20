@@ -15,8 +15,8 @@ template:
   navbar:
     bg: primary
     structure:
-      left: [intro, reference, news]
-      right: [github]
+      left: [intro, get started,reference, news]
+      right: [search,github]
   footer:
     structure:
       left: developed_by

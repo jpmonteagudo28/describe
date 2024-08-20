@@ -34,6 +34,9 @@ If your sample is a 1D set of points use \code{median} or \code{grouped.median} 
 The \code{geom.median} function is used for samples of points in +2D space.
 }
 \examples{
+d <- rlnorm(60,1,1.4)
+geom.median(d,iters = 100)
+
 x <- matrix(rlnorm(60,1,1.4),ncol = 4)
-geom.median(x,iters = 500, tol = 1e-10)
+sapply(x,function(z) geom.median(z,iters = 500, tol = 1e-10))
 }

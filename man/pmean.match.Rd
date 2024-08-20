@@ -29,7 +29,11 @@ the function will make use of robust linear and generalized linear models to mak
 \item{k}{numeric vector indicating number of nearest neighbors to extract for imputation.
 Currently k defaults to 3 but can be changed.}
 
+\item{char_to_factor}{transform character variable to unordered factor variable}
+
 \item{seed}{numeric vector used for reproducible results. Used to sample the same predicted value over time.}
+
+\item{verbose}{verbose error handling}
 }
 \value{
 a matrix or data frame containing the imputed dataset.

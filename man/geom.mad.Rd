@@ -23,6 +23,9 @@ a numeric vector of length 1L.
 We're calculating the median absolute deviation for matrices and arrays
 }
 \examples{
+d <- rlnorm(60,1,1.4)
+geom.mad(d,iters = 100)
+
 x <- matrix(rlnorm(60,1,1.4), ncol = 4)
-geom.mad(x,iters = 500)
+sapply(x,function(z) geom.mad(z,iters = 100))
 }

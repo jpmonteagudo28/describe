@@ -9,7 +9,7 @@
 #'
 #' @description
 #' check.missing takes a data frame and compares the percentage of missing values
-#' pre and post-processing within one imputation function. If missing values completely
+#' pre and post-processing within one imputation function. If missing values are completely
 #' replaced by imputed values, the remaining percent missing should be 0, otherwise
 #' the user will see a warning indicating imputation wasn't performed or the regressors
 #' used in the model contained missing values.

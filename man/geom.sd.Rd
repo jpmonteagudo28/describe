@@ -4,14 +4,14 @@
 \alias{geom.sd}
 \title{Calculate the geometric standard deviation (GSD)}
 \usage{
-geom.sd(x, impute_method = NULL, k = NULL, na.rm = FALSE, ...)
+geom.sd(x, ..., na.rm = FALSE)
 }
 \arguments{
 \item{x}{a numeric vector, matrix or data frame}
 
-\item{na.rm}{indicate whether or not to remove NAs}
-
 \item{...}{additional parameters to be passed to 'geom.mean()'}
+
+\item{na.rm}{indicate whether or not to remove NAs}
 }
 \value{
 a numeric vector of length equal or greater than 1L.
@@ -29,6 +29,9 @@ and preserve the structure of the matrix or data frame. Note that in some cases,
 this method might lead to an artificial increase or decrease in the association between  outcome and original independent variables.
 }
 \examples{
+d <- rlnorm(60,1,1.3)
+geom.sd(d)
+
 x <- matrix(rlnorm(60,1,1.4), ncol = 4)
-geom.sd(x)
+sapply(x,geom.sd)
 }

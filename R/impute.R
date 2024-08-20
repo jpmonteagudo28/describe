@@ -1,6 +1,37 @@
-#> Impute values by randomly selecting data points from recorded observations
-#> Use with stratification accross categorical variables
-#> Reasonable imputation method for MCAR and MAR
+#' @title
+#' Impute values in X by randomly selecting data points from recorded observations in Y.
+#'
+#' @description Hot deck imputation (HDI) is a univariate imputation technique where, for each
+#' respondent or recipient with a missing value, we find a donor with similar values across
+#' a subset of categorical or numerical predictors and use it to fill the recipient's missing
+#' observation. For this reason, HDI has been used with stratification across
+#' categorical variables.
+#'
+#' The current implementation of HDI allows the user to choose one of four selection
+#' methods: deterministic, random sampling from all possible donors, from k-nearest neighbors and
+#' random sampling using weights as probabilities. The function will iteratively impute missing values across
+#' all variables with missing observations using the selection method specified in the function arguments.
+#'
+#' @param data  a matrix or data frame containing missing values in at least one predictor
+#' @param method selection method for imputing missing values based on donor similarity.
+#' Can be one of:
+#' \describe{
+#'   \item{\code{"deterministic"}}{Select the same donor value for multiple repetitions of the CDI.}
+#'   \item{\code{"rand_from_all"}}{Select a different donor value for each repetition of the CDI.}
+#'   \item{\code{"rand_nearest_k"}}{Select one random donor value from a subset of k nearest neighbors for each repetition of the CDI.}
+#'   \item{\code{"weighted_rand"}}{Select one random donor through a probability-weighted choice for each repetition of the CDI.}
+#' }
+#' @param k number of nearest neighbors to select from when using the `rand_nearest_k` method.
+#' @param seed a numeric seed for reproducible results for every method except deterministic selection
+#' @param na.rm indicates removal of NA values from every row in the matrix or data frame
+#'
+#' @return a matrix or data frame of imputed values
+#' @export
+#'
+#' @examples
+#' data <- gen.mcar(100,rho = c(.56,.23,.18),sigma = c(1,2,.5),n_vars = 3,na_prob = .18)
+#' hotdeck.impute(data)
+#'
 
 hotdeck.impute <- function(data,
                            method = "deterministic",
@@ -52,7 +83,7 @@ hotdeck.impute <- function(data,
                   "rand_nearest_k" = {
                         apply(dist, 2, function(d) sample(order(d)[1:min(k, length(d))], 1))
                           },
-                  "weight_rand" = {
+                  "weighted_rand" = {
                         apply(dist, 2, function(d) {
                           weights <- 1 / (d + 1e-8)
                           sample(1:length(d), 1,
@@ -65,21 +96,116 @@ hotdeck.impute <- function(data,
         return(data)
 }
 
+#' @title
+#' Impute values in X by randomly selecting data points from recorded observations in Y from
+#' an external, pre-existing data source.
+#'
+#' @description Cold deck imputation (CDI) is a univariate imputation technique where, for each
+#' respondent or recipient with a missing value, we use an external, pre-existing source to
+#' find a donor with similar values across a subset of categorical or numerical predictors
+#' and use it to fill the recipient's missing observation. For this reason, cold deck
+#' imputation has been used with stratification across categorical variables.
+#'
+#' The current implementation of CDI allows the user to choose one of four selection
+#' methods: deterministic, random sampling from all possible donors, from k-nearest neighbors and
+#' random sampling using weights as probabilities. The function will iteratively impute missing values across
+#' all variables with missing observations using the selection method specified in the function arguments.
+#'
+#' @details
+#' CDI is a valuable method when a reliable external source of data is available and
+#' can ensure more standardized imputations, particularly in large-scale studies or when historical
+#' consistency is important. However, it requires careful consideration to avoid introducing bias
+#' due to mismatches between the current dataset and the external source.
+#'
+#' @param data  a matrix or data frame containing missing values in at least one predictor
+#' @param ext_data external data source of complete cases to be used as donor values
+#' @param method selection method for imputing missing values based on donor similarity.
+#' Can be one of:
+#' \describe{
+#'   \item{\code{"deterministic"}}{Select the same donor value for multiple repetitions of the CDI.}
+#'   \item{\code{"rand_from_all"}}{Select a different donor value for each repetition of the CDI.}
+#'   \item{\code{"rand_nearest_k"}}{Select one random donor value from a subset of k nearest neighbors for each repetition of the CDI.}
+#'   \item{\code{"weighted_rand"}}{Select one random donor through a probability-weighted choice for each repetition of the CDI.}
+#' }
+#' @param k number of nearest neighbors to select from when using the `rand_nearest_k` method.
+#' @param seed a numeric seed for reproducible results for every method except deterministic selection
+#' @param na.rm indicates removal of NA values from every row in the matrix or data frame
+#'
+#' @return a matrix or data frame of imputed values
+#' @export
+#'
+#' @examples
+#' data <- gen.mcar(100,rho = c(.56,.23,.18),sigma = c(1,2,.5),n_vars = 3,na_prob = .18)
+#' ext_data <- gen.mcar(100,rho = c(.45,.26,.21),sigma = c(1.67,2.23,.56),n_vars = 3,na_prob = 0)
+#' coldeck.impute(data,ext_data)
+#'
 coldeck.impute <- function(data,
                            ext_data = NULL,
                            method = "deterministic",
                            k = NULL,
+                           seed = NULL,
                            na.rm = TRUE){
+
   if(is.null(ext_data)){
     stop("`ext_data` must be provided")
   }
+
   stopifnot(is.data.frame(data) || is.matrix(data),
             is.data.frame(ext_data) || is.matrix(ext_data),
             is.character(method),
             is.logical(na.rm)
   )
 
+  if (na.rm) {
+    complete_ext_data <- ext_data[stats::complete.cases(ext_data),]
+
+    if (nrow(complete_ext_data) == 0) {
+      stop("No complete cases found in the external data source.")
+    }
+  } else {
+    complete_ext_data <- ext_data
+  }
+
+  if (!is.null(seed)) {
+    set.seed(seed)
+  }
+
+  na_index <- which(is.na(data), arr.ind = TRUE)
+
+  # Check for NA values in the target data
+  if (nrow(na_index) == 0) {
+    return(data)  # No imputation needed
+  }
+
+  for (j in unique(na_index[, 2])) {
+
+    col_na_index <- na_index[na_index[, 2] == j, , drop = FALSE]
+    complete_cols <- setdiff(1:ncol(data), j)
+    na_rows <- data[col_na_index[, 1], complete_cols, drop = FALSE]
+    donor_rows <- complete_ext_data[, complete_cols, drop = FALSE]
+    dist <- calc.dist(na_rows, donor_rows)
+
+    donor_index <- switch(method,
+                          "deterministic" = apply(dist, 2, which.min),
+                          "rand_from_all" = sample(1:nrow(complete_ext_data),
+                                                   nrow(col_na_index),
+                                                   replace = TRUE),
+                          "rand_nearest_k" = {
+                            apply(dist, 2, function(d) sample(order(d)[1:min(k, length(d))], 1))
+                          },
+                          "weighted_rand" = {
+                            apply(dist, 2, function(d) {
+                              weights <- 1 / (d + 1e-8)
+                              sample(1:length(d), 1,
+                                     prob = weights)
+                            })
+                          }
+    )
+    data[col_na_index[, 1], j] <- complete_ext_data[donor_index, j]
+  }
+  return(data)
 }
+
 #' @title
 #' Imputation of missing values through predictive mean matching
 #'
@@ -101,13 +227,14 @@ coldeck.impute <- function(data,
 #' @param k numeric vector indicating number of nearest neighbors to extract for imputation.
 #' Currently k defaults to 3 but can be changed.
 #' @param seed numeric vector used for reproducible results. Used to sample the same predicted value over time.
+#' @param char_to_factor transform character variable to unordered factor variable
+#' @param verbose verbose error handling
 #'
 #' @return a matrix or data frame containing the imputed dataset.
 #' @export
 #'
 #'
 #' @details
-#'
 #' How's predictive mean matching different from conditional mean imputation(CMI)?
 #'
 #' PMM is a combination of CMI and HDI.
@@ -232,13 +359,14 @@ pmean.match <- function(data,
 #' set.seed(123)
 #' data <- data.frame(x1 = c(stats::rnorm(87),rep(NA,13)),
 #' x2 = stats::rnorm(100),y = stats::rnorm(100))
-#' cm.impute(data)
+#' cmean.impute(data)
 
-cm.impute <- function(data,
+cmean.impute <- function(data,
                       family = "AUTO",
                       robust = FALSE,
                       char_to_factor = FALSE,
                       verbose = FALSE) {
+
   if (!is.data.frame(data)) {
     data <- as.data.frame(data)
   }

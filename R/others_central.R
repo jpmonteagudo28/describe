@@ -1,5 +1,7 @@
+#' @title
 #' Calculate the harmonic mean for matrices, data frames and vectors.
 #'
+#' @description
 #' The harmonic mean is the reciprocal of the arithmetic mean of the
 #' reciprocals of a set of observations. It is a more robust measure of central
 #' tendency than the arithmetic mean in the presence of outliers since it tends
@@ -13,31 +15,27 @@
 #' @export
 #'
 #' @examples
+#' d <- rlnorm(60,1,1.4)
+#' harm.mean(d)
+#'
 #' x <- matrix(rlnorm(60,1,1.4),ncol = 4)
-#' harm.mean(x)
+#' sapply(x,harm.mean)
 harm.mean <- function(x, na.rm = FALSE,...) {
   if (is.data.frame(x) || is.matrix(x)) {
-    if (na.rm) {
-      x <- apply(x, 2, function(column) stats::na.omit(column))
-    }
-    harm_mean <- apply(x, 2, function(column) {
-      n <- length(column)
-      inv_sum <- sum(column^-1)
-      harm.mean <- n / inv_sum
-      return(harm.mean)
-    })
-    return(harm_mean)
-  } else {
+    stop("Provide a numeric vector instead of a matrix or data frame")
+  }
     if (na.rm) {
       x <- x[!is.na(x)]
     }
+
     n <- length(x)
     inv.sum <- sum(x^-1)
     harm.mean <- n / inv.sum
+
     return(harm.mean)
-  }
 }
 
+#' @title
 #' Calculate the weighted harmonic mean for matrices, data frames and vectors
 #'
 #' @param x an object containing a set of observations whose weighted harmonic mean
