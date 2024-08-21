@@ -86,30 +86,30 @@
 <span></span>
 <span><span class="co"># Impute missing values using predictive mean matching</span></span>
 <span><span class="va">imputed_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/pmean.match.html">pmean.match</a></span><span class="op">(</span><span class="va">data</span>, robust <span class="op">=</span> <span class="cn">TRUE</span>, verbose <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Initial missing values: 8 (8.00%)</span></span>
+<span><span class="co">#&gt; Initial missing values: 11 (11.00%)</span></span>
 <span><span class="co">#&gt; Remaining missing values: 0 (0.00%)</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">imputed_data</span>,<span class="fl">10</span><span class="op">)</span></span>
 <span><span class="co">#&gt;            V1         V2</span></span>
-<span><span class="co">#&gt; 1   1.7945695 -0.8437137</span></span>
-<span><span class="co">#&gt; 2   0.8450450 -0.4223777</span></span>
-<span><span class="co">#&gt; 3   1.5095428  2.0415957</span></span>
-<span><span class="co">#&gt; 4   0.0367590  0.3120576</span></span>
-<span><span class="co">#&gt; 5   0.5888666  0.6589248</span></span>
-<span><span class="co">#&gt; 6   0.4108906 -0.2331285</span></span>
-<span><span class="co">#&gt; 7  -2.3065881 -3.2270210</span></span>
-<span><span class="co">#&gt; 8  -0.5356565  0.6062233</span></span>
-<span><span class="co">#&gt; 9   0.9194851 -0.4223777</span></span>
-<span><span class="co">#&gt; 10  0.6637492  1.4249718</span></span>
+<span><span class="co">#&gt; 1  -1.4127223 -0.5205037</span></span>
+<span><span class="co">#&gt; 2   0.3090218  1.4865998</span></span>
+<span><span class="co">#&gt; 3   0.3240344  0.6016828</span></span>
+<span><span class="co">#&gt; 4  -0.9598153 -0.2362346</span></span>
+<span><span class="co">#&gt; 5  -1.4410359 -1.2159774</span></span>
+<span><span class="co">#&gt; 6  -0.4378229 -2.3591382</span></span>
+<span><span class="co">#&gt; 7   0.3059329  1.0015804</span></span>
+<span><span class="co">#&gt; 8  -1.0438890 -1.0072981</span></span>
+<span><span class="co">#&gt; 9  -1.7135055 -1.3785545</span></span>
+<span><span class="co">#&gt; 10 -0.4770137 -0.9220649</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">imputed_data</span><span class="op">)</span></span>
-<span><span class="co">#&gt;        V1                 V2         </span></span>
-<span><span class="co">#&gt;  Min.   :-2.30659   Min.   :-3.2270  </span></span>
-<span><span class="co">#&gt;  1st Qu.:-0.94678   1st Qu.:-0.4224  </span></span>
-<span><span class="co">#&gt;  Median : 0.05330   Median : 0.2962  </span></span>
-<span><span class="co">#&gt;  Mean   :-0.05093   Mean   : 0.1442  </span></span>
-<span><span class="co">#&gt;  3rd Qu.: 0.66375   3rd Qu.: 0.8352  </span></span>
-<span><span class="co">#&gt;  Max.   : 2.43697   Max.   : 2.5081</span></span></code></pre></div>
+<span><span class="co">#&gt;        V1                V2         </span></span>
+<span><span class="co">#&gt;  Min.   :-2.3115   Min.   :-3.4326  </span></span>
+<span><span class="co">#&gt;  1st Qu.:-1.0948   1st Qu.:-1.2160  </span></span>
+<span><span class="co">#&gt;  Median :-0.1535   Median :-0.3153  </span></span>
+<span><span class="co">#&gt;  Mean   :-0.2703   Mean   :-0.2040  </span></span>
+<span><span class="co">#&gt;  3rd Qu.: 0.3237   3rd Qu.: 0.9156  </span></span>
+<span><span class="co">#&gt;  Max.   : 2.8761   Max.   : 2.7516</span></span></code></pre></div>
 <p>What is special about using <code>README.Rmd</code> instead of just <code>README.md</code>? You can include R chunks like so:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Some examples of bootstrapped correlation coefficients and geometric median</span></span></code></pre></div>
