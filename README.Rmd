@@ -1,0 +1,70 @@
+---
+output: github_document
+---
+
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "man/figures/README-",
+  out.width = "100%"
+)
+```
+
+# describe <a href="https://describe.jpmonteagudo.com"><img src="man/figures/logo.png" align="right" height="120" alt="describe website" /></a>
+
+<!-- badges: start -->
+[![CRAN status](https://www.r-pkg.org/badges/version/describe)](https://CRAN.R-project.org/package=describe)
+<!-- badges: end -->
+
+The goal of describe is to make it easy to compute descriptive statistics for non-normal distributions without creating custom functions or spending hours researching stack overflow. This package also provides flexible and intuitive univariate and multiple data imputation and visualizations for exploratory data analysis. 
+
+## Installation
+
+You can install the development version of describe like so:
+
+``` r
+devtools::install_github("jpmonteagudo28/describe")
+```
+You can also install it from CRAN like so:
+
+```r
+install.packages("describe")
+```
+
+## Example
+
+This is a basic example which shows you how to solve a common problem:
+
+```{r example}
+library(describe)
+
+# Generate random data with NAs
+data <- gen.mcar(50,rho = .467,sigma = c(1,1.3),n_vars = 2, na_prob = .10)
+
+# Impute missing values using predictive mean matching
+imputed_data <- pmean.match(data, robust = TRUE, verbose = TRUE)
+
+head(imputed_data,10)
+
+summary(imputed_data)
+
+```
+
+What is special about using `README.Rmd` instead of just `README.md`? You can include R chunks like so:
+
+```{r}
+# Some examples of bootstrapped correlation coefficients and geometric median
+```
+
+You'll still need to render `README.Rmd` regularly, to keep `README.md` up-to-date. `devtools::build_readme()` is handy for this.
+
+You can also embed plots, for example:
+
+```{r pressure, echo = FALSE}
+plot(pressure)
+```
+
+In that case, don't forget to commit and push the resulting figure files, so they display on GitHub and CRAN.
