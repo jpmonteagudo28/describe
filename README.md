@@ -7,7 +7,6 @@
 
 [![CRAN
 status](https://www.r-pkg.org/badges/version/describe)](https://CRAN.R-project.org/package=describe)
-[![R-CMD-check](https://github.com/jpmonteagudo28/describe/workflows/R-CMD-check/badge.svg)](https://github.com/jpmonteagudo28/describe/actions)
 [![Codecov test
 coverage](https://codecov.io/gh/jpmonteagudo28/describe/branch/master/graph/badge.svg)](https://app.codecov.io/gh/jpmonteagudo28/describe?branch=master)
 <!-- badges: end -->
