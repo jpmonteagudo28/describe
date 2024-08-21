@@ -63,60 +63,53 @@
 </div>
 <!-- badges: start -->
 
-<p>The goal of describe is to make it easy to compute descriptive statistics for non-normal distributions without creating custom functions or spending hours researching stack overflow. This package also provides flexible and intuitive univariate and multiple data imputation and visualizations for exploratory data analysis.</p>
+<p>The goal of <code>describe</code> is to make it easy to compute descriptive statistics for non-normal distributions without creating custom functions or spending hours researching stack overflow. This package also provides flexible and intuitive univariate and multiple data imputation and visualizations for exploratory data analysis.</p>
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
-<p>You can install the development version of describe like so:</p>
+<p>You can install the development version of this package through the <code>devtools</code> package.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">devtools</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"jpmonteagudo28/describe"</span><span class="op">)</span></span></code></pre></div>
-<p>You can also install it from CRAN like so:</p>
+<p>You can also install it from CRAN:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"describe"</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
-<h2 id="example">Example<a class="anchor" aria-label="anchor" href="#example"></a>
+<h2 id="usage">Usage<a class="anchor" aria-label="anchor" href="#usage"></a>
 </h2>
-<p>This is a basic example which shows you how to solve a common problem:</p>
+<p><code>describe</code> aims to help researchers and analysts during the exploratory phase of their analysis. This package allows you to compute almost any measure of central tendency, bootstrapped correlation confidence intervals, impute missing values, visualize missing patterns and a few other things.</p>
+<p>The package takes the hard work out of the equation and makes it easy to generate correlated data with missing patterns according to all three missingness mechanisms, missing completely at random (MCAR), missing at random (MAR), and missing not at random (MNAR).</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/jpmonteagudo28/describe" class="external-link">describe</a></span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="co">#library(describe)</span></span>
 <span></span>
 <span><span class="co"># Generate random data with NAs</span></span>
-<span><span class="va">data</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/gen.mcar.html">gen.mcar</a></span><span class="op">(</span><span class="fl">50</span>,rho <span class="op">=</span> <span class="fl">.467</span>,sigma <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>,<span class="fl">1.3</span><span class="op">)</span>,n_vars <span class="op">=</span> <span class="fl">2</span>, na_prob <span class="op">=</span> <span class="fl">.10</span><span class="op">)</span></span>
+<span><span class="co"># data &lt;- gen.mcar(50,rho = .467,sigma = c(1,1.3),n_vars = 2, na_prob = .10)</span></span>
 <span></span>
 <span><span class="co"># Impute missing values using predictive mean matching</span></span>
-<span><span class="va">imputed_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/pmean.match.html">pmean.match</a></span><span class="op">(</span><span class="va">data</span>, robust <span class="op">=</span> <span class="cn">TRUE</span>, verbose <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Initial missing values: 11 (11.00%)</span></span>
-<span><span class="co">#&gt; Remaining missing values: 0 (0.00%)</span></span>
+<span><span class="co"># imputed_data &lt;- pmean.match(data, robust = TRUE, verbose = TRUE)</span></span>
 <span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">imputed_data</span>,<span class="fl">10</span><span class="op">)</span></span>
-<span><span class="co">#&gt;            V1         V2</span></span>
-<span><span class="co">#&gt; 1  -1.4127223 -0.5205037</span></span>
-<span><span class="co">#&gt; 2   0.3090218  1.4865998</span></span>
-<span><span class="co">#&gt; 3   0.3240344  0.6016828</span></span>
-<span><span class="co">#&gt; 4  -0.9598153 -0.2362346</span></span>
-<span><span class="co">#&gt; 5  -1.4410359 -1.2159774</span></span>
-<span><span class="co">#&gt; 6  -0.4378229 -2.3591382</span></span>
-<span><span class="co">#&gt; 7   0.3059329  1.0015804</span></span>
-<span><span class="co">#&gt; 8  -1.0438890 -1.0072981</span></span>
-<span><span class="co">#&gt; 9  -1.7135055 -1.3785545</span></span>
-<span><span class="co">#&gt; 10 -0.4770137 -0.9220649</span></span>
-<span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">imputed_data</span><span class="op">)</span></span>
-<span><span class="co">#&gt;        V1                V2         </span></span>
-<span><span class="co">#&gt;  Min.   :-2.3115   Min.   :-3.4326  </span></span>
-<span><span class="co">#&gt;  1st Qu.:-1.0948   1st Qu.:-1.2160  </span></span>
-<span><span class="co">#&gt;  Median :-0.1535   Median :-0.3153  </span></span>
-<span><span class="co">#&gt;  Mean   :-0.2703   Mean   :-0.2040  </span></span>
-<span><span class="co">#&gt;  3rd Qu.: 0.3237   3rd Qu.: 0.9156  </span></span>
-<span><span class="co">#&gt;  Max.   : 2.8761   Max.   : 2.7516</span></span></code></pre></div>
-<p>What is special about using <code>README.Rmd</code> instead of just <code>README.md</code>? You can include R chunks like so:</p>
+<span><span class="co"># summary(imputed_data)</span></span></code></pre></div>
+<div class="section level3">
+<h3 id="imputation">Imputation<a class="anchor" aria-label="anchor" href="#imputation"></a>
+</h3>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Some examples of bootstrapped correlation coefficients and geometric median</span></span></code></pre></div>
-<p>You’ll still need to render <code>README.Rmd</code> regularly, to keep <code>README.md</code> up-to-date. <code>devtools::build_readme()</code> is handy for this.</p>
-<p>You can also embed plots, for example:</p>
-<p><img src="reference/figures/README-pressure-1.png" width="100%"></p>
-<p>In that case, don’t forget to commit and push the resulting figure files, so they display on GitHub and CRAN.</p>
+</div>
+<div class="section level3">
+<h3 id="visualizations">Visualizations<a class="anchor" aria-label="anchor" href="#visualizations"></a>
+</h3>
+</div>
+</div>
+<div class="section level2">
+<h2 id="further-reading">Further reading<a class="anchor" aria-label="anchor" href="#further-reading"></a>
+</h2>
+<p>Wulff, J. N., &amp; Jeppesen, L. E. (2017). Multiple imputation by chained equations in praxis: Guidelines and review. Electronic Journal of Business Research Methods, 15(1), 41-56. <a href="http://www.ejbrm.com/volume15/issue1" class="external-link uri">http://www.ejbrm.com/volume15/issue1</a></p>
+<p>Li, Peng, Elizabeth A. Stuart, and David B. Allison. 2015. “Multiple Imputation: A Flexible Tool for Handling Missing Data.” JAMA 314 (18): 1966. <a href="https://doi.org/10.1001/jama.2015.15281" class="external-link uri">https://doi.org/10.1001/jama.2015.15281</a>.</p>
+<p>Byrne, John. 2005. “A New Short Exact Geometric Confidence Interval.” Australian &amp; New Zealand Journal of Statistics 47 (4): 563–69. <a href="https://doi.org/10.1111/j.1467-842X.2005.00417.x" class="external-link uri">https://doi.org/10.1111/j.1467-842X.2005.00417.x</a>.</p>
+<p>Donders, A. Rogier T., Geert J.M.G. van der Heijden, Theo Stijnen, and Karel G.M. Moons. 2006. “Review: A Gentle Introduction to Imputation of Missing Values.” Journal of Clinical Epidemiology 59 (10): 1087–91. <a href="https://doi.org/10.1016/j.jclinepi.2006.01.014" class="external-link uri">https://doi.org/10.1016/j.jclinepi.2006.01.014</a>.</p>
+<p>Elamir, Elsayed A H. 2015. “Tests and Confidence Intervals for Geometric Mean from One AND Two Populations: A Unified Approach.” Statistica &amp; Applicazioni. Vol. XIII.</p>
+<p>Yang, John Jeongseok, Yousun Chung, Hyungsuk Kim, Dae-Hyun Ko, Sang-Hyun Hwang, and Heung-Bum Oh. 2020. “Retrospection of Anti–Blood Group Antibody Proficiency Testing Data Using the Geometric Mean and Standard Deviation.” American Journal of Clinical Pathology 153 (4): 530–36. <a href="https://doi.org/10.1093/ajcp/aqz187" class="external-link uri">https://doi.org/10.1093/ajcp/aqz187</a>.</p>
+<p>van Buuren, S. (2018). Flexible Imputation of Missing Data, Second Edition (2nd ed.). Chapman and Hall/CRC. <a href="https://doi.org/10.1201/9780429492259" class="external-link uri">https://doi.org/10.1201/9780429492259</a></p>
 </div>
 </div>
   </main><aside class="col-md-3"><div class="links">
@@ -154,6 +147,8 @@
 <h2 data-toc-skip>Dev status</h2>
 <ul class="list-unstyled">
 <li><a href="https://CRAN.R-project.org/package=describe" class="external-link"><img src="https://www.r-pkg.org/badges/version/describe" alt="CRAN status"></a></li>
+<li><a href="https://github.com/jpmonteagudo28/describe/actions" class="external-link"><img src="https://github.com/jpmonteagudo28/describe/workflows/R-CMD-check/badge.svg" alt="R-CMD-check"></a></li>
+<li><a href="https://app.codecov.io/gh/jpmonteagudo28/describe?branch=master" class="external-link"><img src="https://codecov.io/gh/jpmonteagudo28/describe/branch/master/graph/badge.svg" alt="Codecov test coverage"></a></li>
 </ul>
 </div>
 
