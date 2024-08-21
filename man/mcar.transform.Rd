@@ -25,6 +25,8 @@ replace a percentage of data points in the input.
 \examples{
 set.seed(123)
 data <- data.frame(x1 = stats::rnorm(100),x2 = stats::rnorm(100),y = stats::rnorm(100))
-mcar.transform(data,na_prob = .25)
+mcar_data <- mcar.transform(data,na_prob = .25)
+
+summary(mcar_data)
 
 }

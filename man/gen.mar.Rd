@@ -29,4 +29,5 @@ with missing values.
 }
 \examples{
 syn_na <- gen.mar(50,c(.25,.75,.044),c(1.1,.56,1.56),3,.47)
+summary(syn_na)
 }

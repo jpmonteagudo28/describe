@@ -27,5 +27,6 @@ variable's lowest values and replace them with NA.
 set.seed(123)
 data <- gen.mcar(100,rho = c(.15,.25,.12,.45,.34,.54),sigma = c(1,2,1,2),n_vars = 4, na_prob = 0)
 
-mnar.transform(data,"V1",c("V2","V3"), na_rate = .25)
+mnar_data <- mnar.transform(data,"V1",c("V2","V3"), na_rate = .25)
+summary(mnar_data)
 }

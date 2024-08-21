@@ -62,6 +62,6 @@ data$x1[sample(1:100, 20)] <- NA
 data$x2[sample(1:100, 15)] <- NA
 data$y[sample(1:100, 10)] <- NA
 fact_dat <- data.frame(data, c = gl(5,20))
-pmean.match(fact_dat, robust = TRUE)
-
+matched_data <- pmean.match(fact_dat, robust = TRUE)
+summary(matched_data)
 }

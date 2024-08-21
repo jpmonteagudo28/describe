@@ -17,7 +17,6 @@ knitr::opts_chunk$set(
 
 <!-- badges: start -->
 [![CRAN status](https://www.r-pkg.org/badges/version/describe)](https://CRAN.R-project.org/package=describe)
-[![Codecov test coverage](https://codecov.io/gh/jpmonteagudo28/describe/branch/master/graph/badge.svg)](https://app.codecov.io/gh/jpmonteagudo28/describe?branch=master)
 <!-- badges: end -->
 
 The goal of `describe` is to make it easy to compute descriptive statistics for non-normal distributions without creating custom functions or spending hours researching stack overflow. This package also provides flexible and intuitive univariate and multiple data imputation and visualizations for exploratory data analysis. 
@@ -39,7 +38,7 @@ install.packages("describe")
 
 `describe` aims to help researchers and analysts during the exploratory phase of their analysis. This package allows you to compute almost any measure of central tendency, bootstrapped correlation confidence intervals, impute missing values, visualize missing patterns and a few other things.  
 
-The package takes the hard work out of the equation and makes it easy to generate correlated data with missing patterns according to all three missingness mechanisms, missing completely at random (MCAR), missing at random (MAR), and missing not at random (MNAR). 
+The package makes it easy to generate correlated data with missing patterns according to all three missingness mechanisms, missing completely at random (MCAR), missing at random (MAR), and missing not at random (MNAR). 
 
 ```{r example}
 #library(describe)
@@ -62,7 +61,7 @@ The package takes the hard work out of the equation and makes it easy to generat
 
 ### Visualizations
 
-```{r pressure, echo = FALSE}
+```{r}
 # Plot something here
 ```
 

@@ -43,5 +43,6 @@ bias in the imputed values and works well with MCAR and MAR data.
 \examples{
 data <- data.frame(x1 = c(stats::rnorm(87),rep(NA,13)),
 x2 = stats::rnorm(100),y = stats::rnorm(100))
-stoc.impute(data,tol = 1e-3)
+sri_data <- stoc.impute(data,tol = 1e-3)
+summary(sri_data)
 }

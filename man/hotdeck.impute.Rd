@@ -47,6 +47,6 @@ all variables with missing observations using the selection method specified in 
 }
 \examples{
 data <- gen.mcar(100,rho = c(.56,.23,.18),sigma = c(1,2,.5),n_vars = 3,na_prob = .18)
-hotdeck.impute(data)
-
+hot_data <- hotdeck.impute(data)
+summary(hot_data)
 }

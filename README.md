@@ -7,8 +7,6 @@
 
 [![CRAN
 status](https://www.r-pkg.org/badges/version/describe)](https://CRAN.R-project.org/package=describe)
-[![Codecov test
-coverage](https://codecov.io/gh/jpmonteagudo28/describe/branch/master/graph/badge.svg)](https://app.codecov.io/gh/jpmonteagudo28/describe?branch=master)
 <!-- badges: end -->
 
 The goal of `describe` is to make it easy to compute descriptive
@@ -40,10 +38,10 @@ measure of central tendency, bootstrapped correlation confidence
 intervals, impute missing values, visualize missing patterns and a few
 other things.
 
-The package takes the hard work out of the equation and makes it easy to
-generate correlated data with missing patterns according to all three
-missingness mechanisms, missing completely at random (MCAR), missing at
-random (MAR), and missing not at random (MNAR).
+The package makes it easy to generate correlated data with missing
+patterns according to all three missingness mechanisms, missing
+completely at random (MCAR), missing at random (MAR), and missing not at
+random (MNAR).
 
 ``` r
 #library(describe)
@@ -64,6 +62,10 @@ random (MAR), and missing not at random (MNAR).
 ```
 
 ### Visualizations
+
+``` r
+# Plot something here
+```
 
 ## Further reading
 

@@ -57,6 +57,6 @@ due to mismatches between the current dataset and the external source.
 \examples{
 data <- gen.mcar(100,rho = c(.56,.23,.18),sigma = c(1,2,.5),n_vars = 3,na_prob = .18)
 ext_data <- gen.mcar(100,rho = c(.45,.26,.21),sigma = c(1.67,2.23,.56),n_vars = 3,na_prob = 0)
-coldeck.impute(data,ext_data)
-
+cold_data <- coldeck.impute(data,ext_data)
+summary(cold_data)
 }

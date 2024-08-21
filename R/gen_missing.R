@@ -21,6 +21,7 @@
 #'
 #' @examples
 #' syn_na <- gen.mcar(50,c(.25,.75,.044),c(1.1,.56,1.56),3,.47)
+#' summary(syn_na)
 #'
 gen.mcar <- function(len,
                      rho,
@@ -82,6 +83,7 @@ gen.mcar <- function(len,
 #'
 #' @examples
 #' syn_na <- gen.mar(50,c(.25,.75,.044),c(1.1,.56,1.56),3,.47)
+#' summary(syn_na)
 gen.mar <- function(len,
                     rho,
                     sigma,
@@ -120,7 +122,9 @@ gen.mar <- function(len,
 #' @examples
 #' set.seed(123)
 #' data <- data.frame(x1 = stats::rnorm(100),x2 = stats::rnorm(100),y = stats::rnorm(100))
-#' mcar.transform(data,na_prob = .25)
+#' mcar_data <- mcar.transform(data,na_prob = .25)
+#'
+#' summary(mcar_data)
 #'
 
 mcar.transform <- function(input,na_prob){
@@ -183,8 +187,8 @@ mcar.transform <- function(input,na_prob){
 #' set.seed(123)
 #' data <- gen.mcar(100,rho = c(.15,.25,.12,.45,.34,.54),sigma = c(1,2,1,2),n_vars = 4, na_prob = 0)
 #'
-#' mar.transform(data,"V1",c("V2","V3"), na_rate = .25)
-#'
+#' mar_data <-mar.transform(data,"V1",c("V2","V3"), na_rate = .25)
+#' summary(mar_data)
 
 mar.transform <- function(input,
                           target,
@@ -260,7 +264,8 @@ mar.transform <- function(input,
 #' set.seed(123)
 #' data <- gen.mcar(100,rho = c(.15,.25,.12,.45,.34,.54),sigma = c(1,2,1,2),n_vars = 4, na_prob = 0)
 #'
-#' mnar.transform(data,"V1",c("V2","V3"), na_rate = .25)
+#' mnar_data <- mnar.transform(data,"V1",c("V2","V3"), na_rate = .25)
+#' summary(mnar_data)
 
 mnar.transform <- function(input,
                            target,

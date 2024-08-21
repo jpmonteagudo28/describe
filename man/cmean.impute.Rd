@@ -49,5 +49,6 @@ regressors contain missing values, it is better to use multiple imputation techn
 set.seed(123)
 data <- data.frame(x1 = c(stats::rnorm(87),rep(NA,13)),
 x2 = stats::rnorm(100),y = stats::rnorm(100))
-cmean.impute(data)
+cmi_data <- cmean.impute(data)
+summary(cmi_data)
 }

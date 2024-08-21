@@ -5,10 +5,10 @@ template:
   bootstrap: 5
   bslib:
     bg: "#CBD5DE"
-    fg: "#732002"
+    fg: "#7C225C"
     primary: "#1C588C"
     base_font: {google: "Fira Sans Condensed"}
-    heading_font: {google: "Eagle Lake"}
+    heading_font: {google: "Montserrat Alternates"}
     code_font: {google: "Fira Code"}
   theme: a11y-light
 

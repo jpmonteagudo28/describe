@@ -30,8 +30,8 @@
 #'
 #' @examples
 #' data <- gen.mcar(100,rho = c(.56,.23,.18),sigma = c(1,2,.5),n_vars = 3,na_prob = .18)
-#' hotdeck.impute(data)
-#'
+#' hot_data <- hotdeck.impute(data)
+#' summary(hot_data)
 
 hotdeck.impute <- function(data,
                            method = "deterministic",
@@ -136,8 +136,8 @@ hotdeck.impute <- function(data,
 #' @examples
 #' data <- gen.mcar(100,rho = c(.56,.23,.18),sigma = c(1,2,.5),n_vars = 3,na_prob = .18)
 #' ext_data <- gen.mcar(100,rho = c(.45,.26,.21),sigma = c(1.67,2.23,.56),n_vars = 3,na_prob = 0)
-#' coldeck.impute(data,ext_data)
-#'
+#' cold_data <- coldeck.impute(data,ext_data)
+#' summary(cold_data)
 coldeck.impute <- function(data,
                            ext_data = NULL,
                            method = "deterministic",
@@ -251,8 +251,8 @@ coldeck.impute <- function(data,
 #' data$x2[sample(1:100, 15)] <- NA
 #' data$y[sample(1:100, 10)] <- NA
 #' fact_dat <- data.frame(data, c = gl(5,20))
-#' pmean.match(fact_dat, robust = TRUE)
-#'
+#' matched_data <- pmean.match(fact_dat, robust = TRUE)
+#' summary(matched_data)
 pmean.match <- function(data,
                         family = "AUTO",
                         robust = FALSE,
@@ -358,7 +358,8 @@ pmean.match <- function(data,
 #' set.seed(123)
 #' data <- data.frame(x1 = c(stats::rnorm(87),rep(NA,13)),
 #' x2 = stats::rnorm(100),y = stats::rnorm(100))
-#' cmean.impute(data)
+#' cmi_data <- cmean.impute(data)
+#' summary(cmi_data)
 
 cmean.impute <- function(data,
                       family = "AUTO",
@@ -433,7 +434,8 @@ cmean.impute <- function(data,
 #  set.seed(123)
 #' data <- data.frame(x1 = c(stats::rnorm(87),rep(NA,13)),
 #' x2 = stats::rnorm(100),y = stats::rnorm(100))
-#' stoc.impute(data,tol = 1e-3)
+#' sri_data <- stoc.impute(data,tol = 1e-3)
+#' summary(sri_data)
 
 stoc.impute <- function(data,
                           family = "AUTO",
