@@ -27,7 +27,7 @@ gen.mcar <- function(len,
                      rho,
                      sigma,
                      n_vars,
-                     na_prob = 0) {
+                     na_prob = 0.10) {
 
   stopifnot(is.numeric(len),
             is.numeric(rho),
@@ -88,8 +88,62 @@ gen.mar <- function(len,
                     rho,
                     sigma,
                     n_vars,
-                    na_prob){
+                    na_prob = 0.10,
+                    target = 1){
 
+  stopifnot(is.numeric(len),
+            is.numeric(rho),
+            is.numeric(sigma),
+            rho >= -1,
+            rho <= 1,
+            length(rho) %in% c(1, (n_vars * (n_vars - 1)) / 2),
+            length(sigma) == n_vars,
+            n_vars >= 2,
+            na_prob >= 0,
+            na_prob <= 1,
+            target >= 1,
+            target <= n_vars - 1)
+
+  n <- len
+  A <- diag(n_vars)
+  A[upper.tri(A)] <- rho
+  A[lower.tri(A)] <- rho
+  L <- chol(A)
+  eps <- diag(sigma, nrow = n_vars)
+
+  lambda <- L %*% eps
+  x <- matrix(stats::rnorm(n * n_vars), nrow = n, ncol = n_vars)
+  z <- x %*% lambda
+  z<- as.data.frame(z)
+
+  if(na_prob > 0){
+
+    # Randomly pick target variable(s)
+    target_var <- sample(z,target)
+
+    #index it to be subset
+    target_index <- find.index(z,target_var)
+
+    subset_z <- z[,-target_index, drop = FALSE]
+
+    n_rows <- nrow(z)
+    n_cols <- ncol(subset_z)
+
+    total_na_needed <- ceiling((n_rows * n_cols * na_prob)/n_cols)
+
+    if(total_na_needed >= n_rows * n_cols){
+      stop("Number of NAs required fills or exceeds the total number of cells")
+    }
+
+    sort_index <- order(target_var) # can't order two columns in data frame
+    lowest_index <- sort_index[1:total_na_needed]
+
+    z[lowest_index,-target] <- NA
+
+  }
+  z <- as.data.frame(z)
+
+  return(z)
 }
 
 

@@ -392,4 +392,16 @@ pattern.rank <- function(data) {
 }
 
 #----------------------------------------------------#
+# Simple function to find column index of a subset of
+# columns taken from a data frame. Used in `gen.mar`
+# function
+find.index <- function(data,cols){
 
+  if(!is.data.frame(cols) && !is.matrix(cols)) {
+    stop("The 'cols' argument should be a data frame or matrix.")
+  }
+
+  index <- which(colnames(data) %in% colnames(cols))
+
+  return(index)
+}
