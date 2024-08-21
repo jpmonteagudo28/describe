@@ -2,8 +2,7 @@
 % Please edit documentation in R/gen_missing.R
 \name{mar.transform}
 \alias{mar.transform}
-\title{Transform non-missing data to missing values
-with user-specified probability of MAR}
+\title{Transform  data to missing values at random.}
 \usage{
 mar.transform(input, target, features, na_rate)
 }

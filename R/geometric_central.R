@@ -1,5 +1,7 @@
-#' Calculate the geometric median for non-collinear points in 2D+ Euclidean Space
+#' @title
+#' Calculate the geometric median
 #'
+#' @description
 #' Using the Weiszfeld algorithm an iterative method to compute the geometric
 #' median of a set of points in Euclidean space. In general, measures of central
 #' tendency minimize the sum of the Euclidean distance from the center to each
@@ -27,7 +29,7 @@
 #' geom.median(d,iters = 100)
 #'
 #' x <- matrix(rlnorm(60,1,1.4),ncol = 4)
-#' sapply(x,function(z) geom.median(z,iters = 500, tol = 1e-10))
+#' mapply(geom.median, as.data.frame(x))
 geom.median <- function(x,iters = 1000, tol = 1e-8,na.rm = FALSE){
   stopifnot(is.numeric(x),
             is.numeric(iters),
@@ -58,9 +60,15 @@ geom.median <- function(x,iters = 1000, tol = 1e-8,na.rm = FALSE){
   return(center)
 }
 
-#' Calculate the median of distances to the geometric mean for a 2D+ space
+#' @title
+#' Calculate the median of distances to the geometric mean
 #'
-#' We're calculating the median absolute deviation for matrices and arrays
+#' @description
+#' The median absolute deviation is a measure of statistical dispersion that is
+#' more resilient to outliers than the standard deviation. Because the median absolute
+#' deviation is more robust to outliers, it may prove useful in distributions with
+#' mean or variance.
+#'
 #' @param x a numeric vector or matrix containing a set of points in n-dimensions
 #' @param iters number of iterations used in Weiszfeld algorithm
 #' @param na.rm set to FALSE by default to ignore NA. Set to TRUE to remove NA
@@ -72,12 +80,12 @@ geom.median <- function(x,iters = 1000, tol = 1e-8,na.rm = FALSE){
 #'
 #' @examples
 #' d <- rlnorm(60,1,1.4)
-#' geom.mad(d,iters = 100)
+#' geom.mad(d,iters = 50)
 #'
 #' x <- matrix(rlnorm(60,1,1.4), ncol = 4)
-#' sapply(x,function(z) geom.mad(z,iters = 100))
+#' mapply(geom.mad, as.data.frame(x))
 geom.mad <- function(x,
-                     iters = 1000,
+                     iters = 100,
                      na.rm = FALSE,
                      ...){
 
@@ -106,9 +114,10 @@ geom.mad <- function(x,
   }
 }
 
-#' Calculate the geometric mean for a set of non-negative, non-zero observations.
+#' @title
+#' Calculate the geometric mean
 #'
-#'
+#' @description
 #' The geometric mean is the nth root of the product of 'n' observations.
 #' It multiplies the observations in a set and can be thought of as the
 #' exponential of the arithmetic mean of logarithms. We use  this definition
@@ -117,7 +126,7 @@ geom.mad <- function(x,
 #'
 #' @details
 #' Because we're using logarithms, our observations must be non-negative.
-#' Additionally, by using the geometric mean and SD and variance, we'll be
+#' Additionally, by using the geometric mean, SD and variance, we'll be
 #' measuring the log-normal dispersion of a log-normal distribution
 #'
 #' @param x a numeric vector, matrix or data frame
@@ -128,11 +137,11 @@ geom.mad <- function(x,
 #' @export
 #'
 #' @examples
-#' x <- rlnorm(60,1,1.4)
-#' geom.mean(x)
+#' d <- rlnorm(60,1,1.4)
+#' geom.mean(d)
 #'
-#' d <- matrix(rlnorm(60,1,1.3),ncol = 4)
-#' sapply(d,geom.mean)
+#' x <- matrix(rlnorm(60,1,1.3),ncol = 4)
+#' mapply(geom.mean, as.data.frame(x))
 geom.mean <- function(x, ..., na.rm = FALSE) {
   if(any(x < 0, na.rm = TRUE)){
     return(NaN)
@@ -145,8 +154,10 @@ geom.mean <- function(x, ..., na.rm = FALSE) {
 }
 
 
+#' @title
 #' Calculate the geometric standard deviation (GSD)
 #'
+#' @description
 #' The GSD is  the standard deviation of the geometric mean for of
 #' a set of non-negative,non-zero observations.The GSD is a dimensionless
 #' (unitless) multiplicative factor. It describes the range from the mean
@@ -171,7 +182,7 @@ geom.mean <- function(x, ..., na.rm = FALSE) {
 #' geom.sd(d)
 #'
 #' x <- matrix(rlnorm(60,1,1.4), ncol = 4)
-#' sapply(x,geom.sd)
+#' mapply(geom.sd, as.data.frame(x))
 
 geom.sd <- function(x,...,na.rm = FALSE){
 
@@ -192,8 +203,13 @@ geom.sd <- function(x,...,na.rm = FALSE){
       return(g.sd)
 }
 
-#' Calculate the geometric variance of a set of observations of non-negative,
-#' non-zero observations.
+#' @title
+#' Calculate the geometric variance
+#'
+#' @description
+#' Spread of values around the geometric mean. The geometric standard deviation
+#' can be described as a geometric factor and this cannot be added/subtracted from
+#' the geometric mean.
 #'
 #' @param x a numeric vector, matrix or data frame
 #' @param ... additional parameters to be passed to 'geom.mean()'
@@ -207,7 +223,7 @@ geom.sd <- function(x,...,na.rm = FALSE){
 #' geom.var(d)
 #'
 #' x <- matrix(rlnorm(60,1,1.4), ncol = 4)
-#' sapply(x,geom.var)
+#' mapply(geom.var,as.data.frame(x))
 geom.var <- function(x,...,na.rm = FALSE){
 
   if (is.data.frame(x) || is.matrix(x)) {
@@ -226,9 +242,16 @@ geom.var <- function(x,...,na.rm = FALSE){
     return(g.var)
 }
 
-#' Calculate the number of GSD by which the raw value is above/below the
-#' mean.
+#' @title
+#' Calculate the geometric standardized score
 #'
+#' @description
+#' Compute the geometric z score of each strictly positive value in the sample,
+#' relative to the geometric mean and standard deviation typically used in log-normally
+#' distributed populations.
+#'
+#'
+#' @details
 #' The formula here makes use of the change of base property of logarithms.
 #'
 #' @param x a numeric vector, matrix or data frame
@@ -243,7 +266,7 @@ geom.var <- function(x,...,na.rm = FALSE){
 #' geom.zscore(d)
 #'
 #' x <- matrix(rlnorm(60,1,1.4), ncol = 4)
-#' sapply(x,geom.zscore)
+#' mapply(geom.zscore, as.data.frame(x))
 geom.zscore <- function(x,...,na.rm = FALSE){
   if(any(x < 0, na.rm = TRUE)){
     return(NaN)

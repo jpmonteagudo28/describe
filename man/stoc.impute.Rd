@@ -2,7 +2,7 @@
 % Please edit documentation in R/impute.R
 \name{stoc.impute}
 \alias{stoc.impute}
-\title{Stochastic regression imputation with custom regression variance}
+\title{Stochastic regression imputation (SRI)}
 \usage{
 stoc.impute(
   data,
@@ -37,8 +37,8 @@ a matrix or data frame containing the imputed dataset.
 }
 \description{
 This method corrects the lack of variability in conditional mean imputation (CMI) by adding
-an error term to the conditional mean calculation. This method is more effective than CMI in reducing
-bias in the imputed values. Work well with MCAR and MAR data.
+an error term to the conditional mean calculation. SRI is more effective than CMI in reducing
+bias in the imputed values and works well with MCAR and MAR data.
 }
 \examples{
 data <- data.frame(x1 = c(stats::rnorm(87),rep(NA,13)),

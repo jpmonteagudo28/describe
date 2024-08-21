@@ -1,7 +1,6 @@
 #-----------------------------------------------#
 #' @title
-#' Generate a data frame of any length containing any given number of NA values according to
-#' the missing completely at random mechanism.
+#' Generate a data frame containing NAs missing completely at random
 #'
 #' @description
 #' Generate correlated, synthetic normal variables with user-specified probability of MCAR.
@@ -62,8 +61,7 @@ gen.mcar <- function(len,
 
 #-----------------------------------------------#
 #' @title
-#' Generate a data frame of any length containing any given number of NA values according
-#' to the missing at random mechanism.
+#' Generate a data frame containing  NAs missing at random
 #'
 #' @description
 #' Generate correlated, synthetic normal variables with user-specified probability of MAR.
@@ -102,7 +100,7 @@ gen.mar <- function(len,
 
 #-------------------------------------------------#
 #' @title
-#'  Transform non-missing data to missing values with user-specified probability of MCAR
+#'  Transform data to missing values completely at random
 #'
 #' @description
 #'  Transform a complete case dataset according to the MCAR mechanism.The MCAR
@@ -163,8 +161,7 @@ mcar.transform <- function(input,na_prob){
 
 
 #-------------------------------------------------#
-#' @title Transform non-missing data to missing values
-#' with user-specified probability of MAR
+#' @title Transform  data to missing values at random.
 #'
 #' @description
 #' Transform a complete case dataset according to the MAR mechanism.The MAR
@@ -244,7 +241,7 @@ mar.transform <- function(input,
 }
 #--------------------------------------------------#
 #' @title
-#' Transform non-missing data to missing values with user-specified probability of MNAR.
+#' Transform data to missing values not at random
 #'
 #' @description
 #' The MNAR mechanism assumes that the probability and cause of missingness are unknown to us and lie

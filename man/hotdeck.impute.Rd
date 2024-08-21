@@ -2,7 +2,7 @@
 % Please edit documentation in R/impute.R
 \name{hotdeck.impute}
 \alias{hotdeck.impute}
-\title{Impute values in X by randomly selecting data points from recorded observations in Y.}
+\title{Hot deck imputation}
 \usage{
 hotdeck.impute(
   data,

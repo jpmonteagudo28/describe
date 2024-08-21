@@ -2,7 +2,7 @@
 % Please edit documentation in R/gen_missing.R
 \name{mcar.transform}
 \alias{mcar.transform}
-\title{Transform non-missing data to missing values with user-specified probability of MCAR}
+\title{Transform data to missing values completely at random}
 \usage{
 mcar.transform(input, na_prob)
 }

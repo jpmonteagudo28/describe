@@ -17,54 +17,69 @@ knitr::opts_chunk$set(
 
 <!-- badges: start -->
 [![CRAN status](https://www.r-pkg.org/badges/version/describe)](https://CRAN.R-project.org/package=describe)
+[![R-CMD-check](https://github.com/jpmonteagudo28/describe/workflows/R-CMD-check/badge.svg)](https://github.com/jpmonteagudo28/describe/actions)
+[![Codecov test coverage](https://codecov.io/gh/jpmonteagudo28/describe/branch/master/graph/badge.svg)](https://app.codecov.io/gh/jpmonteagudo28/describe?branch=master)
 <!-- badges: end -->
 
-The goal of describe is to make it easy to compute descriptive statistics for non-normal distributions without creating custom functions or spending hours researching stack overflow. This package also provides flexible and intuitive univariate and multiple data imputation and visualizations for exploratory data analysis. 
+The goal of `describe` is to make it easy to compute descriptive statistics for non-normal distributions without creating custom functions or spending hours researching stack overflow. This package also provides flexible and intuitive univariate and multiple data imputation and visualizations for exploratory data analysis. 
 
 ## Installation
 
-You can install the development version of describe like so:
+You can install the development version of this package through the `devtools` package.
 
 ``` r
 devtools::install_github("jpmonteagudo28/describe")
 ```
-You can also install it from CRAN like so:
+You can also install it from CRAN:
 
 ```r
 install.packages("describe")
 ```
 
-## Example
+## Usage
 
-This is a basic example which shows you how to solve a common problem:
+`describe` aims to help researchers and analysts during the exploratory phase of their analysis. This package allows you to compute almost any measure of central tendency, bootstrapped correlation confidence intervals, impute missing values, visualize missing patterns and a few other things.  
+
+The package takes the hard work out of the equation and makes it easy to generate correlated data with missing patterns according to all three missingness mechanisms, missing completely at random (MCAR), missing at random (MAR), and missing not at random (MNAR). 
 
 ```{r example}
-library(describe)
+#library(describe)
 
 # Generate random data with NAs
-data <- gen.mcar(50,rho = .467,sigma = c(1,1.3),n_vars = 2, na_prob = .10)
+# data <- gen.mcar(50,rho = .467,sigma = c(1,1.3),n_vars = 2, na_prob = .10)
 
 # Impute missing values using predictive mean matching
-imputed_data <- pmean.match(data, robust = TRUE, verbose = TRUE)
+# imputed_data <- pmean.match(data, robust = TRUE, verbose = TRUE)
 
-head(imputed_data,10)
-
-summary(imputed_data)
+# summary(imputed_data)
 
 ```
 
-What is special about using `README.Rmd` instead of just `README.md`? You can include R chunks like so:
+### Imputation 
 
 ```{r}
 # Some examples of bootstrapped correlation coefficients and geometric median
 ```
 
-You'll still need to render `README.Rmd` regularly, to keep `README.md` up-to-date. `devtools::build_readme()` is handy for this.
-
-You can also embed plots, for example:
+### Visualizations
 
 ```{r pressure, echo = FALSE}
 # Plot something here
 ```
 
-In that case, don't forget to commit and push the resulting figure files, so they display on GitHub and CRAN.
+## Further reading
+
+Wulff, J. N., & Jeppesen, L. E. (2017). Multiple imputation by chained equations in praxis: Guidelines and review. Electronic Journal of Business Research Methods, 15(1), 41-56. http://www.ejbrm.com/volume15/issue1
+
+Li, Peng, Elizabeth A. Stuart, and David B. Allison. 2015. “Multiple Imputation: A Flexible Tool for Handling Missing Data.” JAMA 314 (18): 1966. https://doi.org/10.1001/jama.2015.15281.
+
+Byrne, John. 2005. “A New Short Exact Geometric Confidence Interval.” Australian & New Zealand Journal of Statistics 47 (4): 563–69. https://doi.org/10.1111/j.1467-842X.2005.00417.x.
+
+  Donders, A. Rogier T., Geert J.M.G. van der Heijden, Theo Stijnen, and Karel G.M. Moons. 2006. “Review: A Gentle Introduction to Imputation of Missing Values.” Journal of Clinical Epidemiology 59 (10): 1087–91. https://doi.org/10.1016/j.jclinepi.2006.01.014.
+
+  Elamir, Elsayed A H. 2015. “Tests and Confidence Intervals for Geometric Mean from One AND Two Populations: A Unified Approach.” Statistica & Applicazioni. Vol. XIII.
+
+  Yang, John Jeongseok, Yousun Chung, Hyungsuk Kim, Dae-Hyun Ko, Sang-Hyun Hwang, and Heung-Bum Oh. 2020. “Retrospection of Anti–Blood Group Antibody Proficiency Testing Data Using the Geometric Mean and Standard Deviation.” American Journal of Clinical Pathology 153 (4): 530–36. https://doi.org/10.1093/ajcp/aqz187.
+  
+ van Buuren, S. (2018). Flexible Imputation of Missing Data, Second Edition (2nd ed.). Chapman and Hall/CRC. https://doi.org/10.1201/9780429492259 
+

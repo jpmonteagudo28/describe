@@ -2,7 +2,7 @@
 % Please edit documentation in R/geometric_central.R
 \name{geom.median}
 \alias{geom.median}
-\title{Calculate the geometric median for non-collinear points in 2D+ Euclidean Space}
+\title{Calculate the geometric median}
 \usage{
 geom.median(x, iters = 1000, tol = 1e-08, na.rm = FALSE)
 }
@@ -38,5 +38,5 @@ d <- rlnorm(60,1,1.4)
 geom.median(d,iters = 100)
 
 x <- matrix(rlnorm(60,1,1.4),ncol = 4)
-sapply(x,function(z) geom.median(z,iters = 500, tol = 1e-10))
+mapply(geom.median, as.data.frame(x))
 }

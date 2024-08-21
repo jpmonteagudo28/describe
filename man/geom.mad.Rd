@@ -2,9 +2,9 @@
 % Please edit documentation in R/geometric_central.R
 \name{geom.mad}
 \alias{geom.mad}
-\title{Calculate the median of distances to the geometric mean for a 2D+ space}
+\title{Calculate the median of distances to the geometric mean}
 \usage{
-geom.mad(x, iters = 1000, na.rm = FALSE, ...)
+geom.mad(x, iters = 100, na.rm = FALSE, ...)
 }
 \arguments{
 \item{x}{a numeric vector or matrix containing a set of points in n-dimensions}
@@ -20,12 +20,15 @@ current tolerance set to 1e-8.}
 a numeric vector of length 1L.
 }
 \description{
-We're calculating the median absolute deviation for matrices and arrays
+The median absolute deviation is a measure of statistical dispersion that is
+more resilient to outliers than the standard deviation. Because the median absolute
+deviation is more robust to outliers, it may prove useful in distributions with
+mean or variance.
 }
 \examples{
 d <- rlnorm(60,1,1.4)
-geom.mad(d,iters = 100)
+geom.mad(d,iters = 50)
 
 x <- matrix(rlnorm(60,1,1.4), ncol = 4)
-sapply(x,function(z) geom.mad(z,iters = 100))
+mapply(geom.mad, as.data.frame(x))
 }

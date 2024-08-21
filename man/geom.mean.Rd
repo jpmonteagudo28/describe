@@ -2,7 +2,7 @@
 % Please edit documentation in R/geometric_central.R
 \name{geom.mean}
 \alias{geom.mean}
-\title{Calculate the geometric mean for a set of non-negative, non-zero observations.}
+\title{Calculate the geometric mean}
 \usage{
 geom.mean(x, ..., na.rm = FALSE)
 }
@@ -25,13 +25,13 @@ mean for all numeric columns in  a matrix or data frame.
 }
 \details{
 Because we're using logarithms, our observations must be non-negative.
-Additionally, by using the geometric mean and SD and variance, we'll be
+Additionally, by using the geometric mean, SD and variance, we'll be
 measuring the log-normal dispersion of a log-normal distribution
 }
 \examples{
-x <- rlnorm(60,1,1.4)
-geom.mean(x)
+d <- rlnorm(60,1,1.4)
+geom.mean(d)
 
-d <- matrix(rlnorm(60,1,1.3),ncol = 4)
-sapply(d,geom.mean)
+x <- matrix(rlnorm(60,1,1.3),ncol = 4)
+mapply(geom.mean, as.data.frame(x))
 }

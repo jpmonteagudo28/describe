@@ -2,8 +2,7 @@
 % Please edit documentation in R/gen_missing.R
 \name{gen.mar}
 \alias{gen.mar}
-\title{Generate a data frame of any length containing any given number of NA values according
-to the missing at random mechanism.}
+\title{Generate a data frame containing  NAs missing at random}
 \usage{
 gen.mar(len, rho, sigma, n_vars, na_prob)
 }

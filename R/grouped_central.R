@@ -1,5 +1,7 @@
-#' Calculate mean for grouped data using frequency, either percent or counts.
+#'  @title Calculate the grouped mean
 #'
+#' @description
+#' Calculate mean for grouped data using frequency, either percent or counts.
 #' The function will split each character element in x and find the midpoint of
 #' its lower and upper bounds.
 #'
@@ -68,6 +70,9 @@
   return(mu)
 }
 
+#' @title Calculate the grouped median
+#'
+#' @description
 #' Calculate median of grouped data using frequency, either percent or counts.
 #'
 #' @param x character vector of categories or ranges

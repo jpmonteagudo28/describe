@@ -2,8 +2,7 @@
 % Please edit documentation in R/gen_missing.R
 \name{gen.mcar}
 \alias{gen.mcar}
-\title{Generate a data frame of any length containing any given number of NA values according to
-the missing completely at random mechanism.}
+\title{Generate a data frame containing NAs missing completely at random}
 \usage{
 gen.mcar(len, rho, sigma, n_vars, na_prob = 0)
 }

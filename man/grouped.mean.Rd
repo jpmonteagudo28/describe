@@ -2,7 +2,7 @@
 % Please edit documentation in R/grouped_central.R
 \name{grouped.mean}
 \alias{grouped.mean}
-\title{Calculate mean for grouped data using frequency, either percent or counts.}
+\title{@title Calculate the grouped mean}
 \usage{
 grouped.mean(x, freq, freq_format = "count", na.rm = FALSE)
 }
@@ -20,6 +20,7 @@ converted to percent}
 a numeric vector of length 1L
 }
 \description{
+Calculate mean for grouped data using frequency, either percent or counts.
 The function will split each character element in x and find the midpoint of
 its lower and upper bounds.
 }

@@ -2,7 +2,7 @@
 % Please edit documentation in R/impute.R
 \name{pmean.match}
 \alias{pmean.match}
-\title{Imputation of missing values through predictive mean matching}
+\title{Predictive mean matching imputation (PMI)}
 \usage{
 pmean.match(
   data,

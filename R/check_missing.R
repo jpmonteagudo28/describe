@@ -1,5 +1,5 @@
 #' @title
-#' Check percent of missing values in data frame or matrix pre and post-processing
+#' Check percent of missing values in data frame or matrix
 #'
 #' @param data data frame or matrix prior to processing
 #' @param post_data data frame or matrix after processing

@@ -2,8 +2,7 @@
 % Please edit documentation in R/geometric_central.R
 \name{geom.zscore}
 \alias{geom.zscore}
-\title{Calculate the number of GSD by which the raw value is above/below the
-mean.}
+\title{Calculate the geometric standardized score}
 \usage{
 geom.zscore(x, ..., na.rm = FALSE)
 }
@@ -18,6 +17,11 @@ geom.zscore(x, ..., na.rm = FALSE)
 a matrix or array of z-scores of length > 1L.
 }
 \description{
+Compute the geometric z score of each strictly positive value in the sample,
+relative to the geometric mean and standard deviation typically used in log-normally
+distributed populations.
+}
+\details{
 The formula here makes use of the change of base property of logarithms.
 }
 \examples{
@@ -25,5 +29,5 @@ d <- rlnorm(60,1,1.4)
 geom.zscore(d)
 
 x <- matrix(rlnorm(60,1,1.4), ncol = 4)
-sapply(x,geom.zscore)
+mapply(geom.zscore, as.data.frame(x))
 }

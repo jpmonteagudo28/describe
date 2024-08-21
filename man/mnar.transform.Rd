@@ -2,7 +2,7 @@
 % Please edit documentation in R/gen_missing.R
 \name{mnar.transform}
 \alias{mnar.transform}
-\title{Transform non-missing data to missing values with user-specified probability of MNAR.}
+\title{Transform data to missing values not at random}
 \usage{
 mnar.transform(input, target, features, na_rate)
 }

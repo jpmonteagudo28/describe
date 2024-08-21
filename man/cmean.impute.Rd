@@ -2,7 +2,7 @@
 % Please edit documentation in R/impute.R
 \name{cmean.impute}
 \alias{cmean.impute}
-\title{Imputation of missing values through conditional mean imputation (CMI).}
+\title{Conditional Mean Imputation (CMI)}
 \usage{
 cmean.impute(
   data,

@@ -2,7 +2,7 @@
 % Please edit documentation in R/check_missing.R
 \name{check.missing}
 \alias{check.missing}
-\title{Check percent of missing values in data frame or matrix pre and post-processing}
+\title{Check percent of missing values in data frame or matrix}
 \usage{
 check.missing(data, post_data = NULL, verbose = FALSE)
 }

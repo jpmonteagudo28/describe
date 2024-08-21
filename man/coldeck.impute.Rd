@@ -2,8 +2,7 @@
 % Please edit documentation in R/impute.R
 \name{coldeck.impute}
 \alias{coldeck.impute}
-\title{Impute values in X by randomly selecting data points from recorded observations in Y from
-an external, pre-existing data source.}
+\title{Cold deck imputation}
 \usage{
 coldeck.impute(
   data,

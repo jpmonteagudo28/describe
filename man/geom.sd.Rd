@@ -33,5 +33,5 @@ d <- rlnorm(60,1,1.3)
 geom.sd(d)
 
 x <- matrix(rlnorm(60,1,1.4), ncol = 4)
-sapply(x,geom.sd)
+mapply(geom.sd, as.data.frame(x))
 }

@@ -2,7 +2,7 @@
 % Please edit documentation in R/others_central.R
 \name{harm.mean}
 \alias{harm.mean}
-\title{Calculate the harmonic mean for matrices, data frames and vectors.}
+\title{Calculate the harmonic mean}
 \usage{
 harm.mean(x, na.rm = FALSE, ...)
 }
@@ -27,5 +27,5 @@ d <- rlnorm(60,1,1.4)
 harm.mean(d)
 
 x <- matrix(rlnorm(60,1,1.4),ncol = 4)
-sapply(x,harm.mean)
+mapply(harm.mean, as.data.frame(x))
 }

@@ -1,5 +1,5 @@
 #' @title
-#' Impute values in X by randomly selecting data points from recorded observations in Y.
+#' Hot deck imputation
 #'
 #' @description Hot deck imputation (HDI) is a univariate imputation technique where, for each
 #' respondent or recipient with a missing value, we find a donor with similar values across
@@ -97,8 +97,7 @@ hotdeck.impute <- function(data,
 }
 
 #' @title
-#' Impute values in X by randomly selecting data points from recorded observations in Y from
-#' an external, pre-existing data source.
+#' Cold deck imputation
 #'
 #' @description Cold deck imputation (CDI) is a univariate imputation technique where, for each
 #' respondent or recipient with a missing value, we use an external, pre-existing source to
@@ -207,7 +206,7 @@ coldeck.impute <- function(data,
 }
 
 #' @title
-#' Imputation of missing values through predictive mean matching
+#' Predictive mean matching imputation (PMI)
 #'
 #' @description
 #' Predictive mean matching (PMM)
@@ -323,7 +322,7 @@ pmean.match <- function(data,
 }
 
 #' @title
-#' Imputation of missing values through conditional mean imputation (CMI).
+#' Conditional Mean Imputation (CMI)
 #'
 #' @param data a numeric matrix or data frame of at least 2 columns.
 #' @param family the distribution family of your observations. The family arguments defaults
@@ -407,12 +406,12 @@ cmean.impute <- function(data,
 }
 
 #' @title
-#' Stochastic regression imputation with custom regression variance
+#' Stochastic regression imputation (SRI)
 #'
 #' @description
 #' This method corrects the lack of variability in conditional mean imputation (CMI) by adding
-#' an error term to the conditional mean calculation. This method is more effective than CMI in reducing
-#' bias in the imputed values. Work well with MCAR and MAR data.
+#' an error term to the conditional mean calculation. SRI is more effective than CMI in reducing
+#' bias in the imputed values and works well with MCAR and MAR data.
 #'
 #' @param data a numeric matrix or data frame of at least 2 columns.
 #' @param family the distribution family of your observations. The family arguments defaults

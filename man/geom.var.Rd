@@ -2,8 +2,7 @@
 % Please edit documentation in R/geometric_central.R
 \name{geom.var}
 \alias{geom.var}
-\title{Calculate the geometric variance of a set of observations of non-negative,
-non-zero observations.}
+\title{Calculate the geometric variance}
 \usage{
 geom.var(x, ..., na.rm = FALSE)
 }
@@ -18,13 +17,14 @@ geom.var(x, ..., na.rm = FALSE)
 a numeric vector of length equal or greater than 1L.
 }
 \description{
-Calculate the geometric variance of a set of observations of non-negative,
-non-zero observations.
+Spread of values around the geometric mean. The geometric standard deviation
+can be described as a geometric factor and this cannot be added/subtracted from
+the geometric mean.
 }
 \examples{
 d <- rlnorm(60,1,1.3)
 geom.var(d)
 
 x <- matrix(rlnorm(60,1,1.4), ncol = 4)
-sapply(x,geom.var)
+mapply(geom.var,as.data.frame(x))
 }

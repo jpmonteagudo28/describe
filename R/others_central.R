@@ -1,5 +1,5 @@
 #' @title
-#' Calculate the harmonic mean for matrices, data frames and vectors.
+#' Calculate the harmonic mean
 #'
 #' @description
 #' The harmonic mean is the reciprocal of the arithmetic mean of the
@@ -19,11 +19,17 @@
 #' harm.mean(d)
 #'
 #' x <- matrix(rlnorm(60,1,1.4),ncol = 4)
-#' sapply(x,harm.mean)
+#' mapply(harm.mean, as.data.frame(x))
 harm.mean <- function(x, na.rm = FALSE,...) {
+
   if (is.data.frame(x) || is.matrix(x)) {
     stop("Provide a numeric vector instead of a matrix or data frame")
   }
+
+  if(any(x < 0, na.rm = TRUE)){
+    stop("Mean only defined for positive real numbers")
+  }
+
     if (na.rm) {
       x <- x[!is.na(x)]
     }
@@ -36,11 +42,11 @@ harm.mean <- function(x, na.rm = FALSE,...) {
 }
 
 #' @title
-#' Calculate the weighted harmonic mean for matrices, data frames and vectors
+#' Calculate the weighted harmonic mean
 #'
 #' @param x an object containing a set of observations whose weighted harmonic mean
 #' is to be computed
-#' @param w a numerical vector of weights the same length as x
+#' @param weights a numerical vector of weights the same length as x
 #' @param na.rm logical by default set to FALSE. To remove NAs set argument to TRUE
 #' @param ... additional arguments passed to or from other methods
 #'
@@ -48,55 +54,87 @@ harm.mean <- function(x, na.rm = FALSE,...) {
 #' @export
 #'
 #' @examples
-#' x <- matrix(rlnorm(60,1,1.4),ncol = 4)
-#' w <- matrix(rnorm(60,0,0.23), ncol = 4)
-#' w.harm.mean(x,w)
-w.harm.mean <- function(x,w = NULL,na.rm = FALSE,...){
+#' d <- rlnorm(60,1,1.4)
+#' w <- rlnorm(60,2,3.23)
+#' weight.harm.mean(d,w)
+#'
+#' x <- matrix(rlnorm(60,1,1.4), ncol = 4)
+#' w <- matrix(rlnorm(60,1,1), ncol = 4)
+#' mapply(weight.harm.mean, as.data.frame(x),as.data.frame(w))
+weight.harm.mean <- function(x, weights = NULL, na.rm = FALSE, ...) {
 
+  stopifnot(is.numeric(x),
+            is.logical(na.rm)
+            )
 
-  if(is.null(w)){
-    if(na.rm){
-      x <- x[!is.na(x)]
-      return(harm.mean(x))
+  if (!is.null(weights)) {
+    stopifnot(is.numeric(weights))
+
+    if (length(x) != length(weights)) {
+      stop("'x' and 'weights' must be of the same length")
     }
   }
-  if(length(w) != length(x)){
-    stop("'x' and 'w' must be of the same length")
-  }
-  w <- as.double(w)
+
   if (na.rm) {
-    i <- !is.na(x)
-    w <- w[i]
-    x <- x[i]
+    valid <- !is.na(x)
+    x <- x[valid]
+
+    if (!is.null(weights)) {
+      weights <- weights[valid]
+    }
   }
-  inv_sum <- sum(w/x)
-  w_sum <- sum(x)
-  harm_mean <- w_sum/inv_sum
+
+  if (is.null(weights)) {
+    harm_mean <- harm.mean(x)
+  } else {
+    inv_sum <- sum(weights / x)
+    weight_sum <- sum(weights)
+    harm_mean <- weight_sum / inv_sum
+  }
+
   return(harm_mean)
 }
 
-
+#' @title Calculate the quadratic mean
+#'
+#' @description
+#' Calculate the absolute magnitude for a numeric vector where greater values
+#' are given more importance than lesser values. The arithmetic mean is typically
+#' equal or greater than the arithmetic mean.
+#'
+#' @details
+#' The quadratic mean or root mean square is scale invariant but not shift invariant, shifting
+#' the input values by a fix amount will not change the point estimate.
+#'
+#' @param x a numeric vector of observations
+#' @param ... additional arguments passed to or from other methods
+#' @param na.rm logical by default set to FALSE. To remove NAs set argument to TRUE
+#'
+#' @return a numeric vector of length 1L
+#' @export
+#'
+#' @examples
+#' d <- rlnorm(60,1,1.4)
+#' quad.mean(d)
+#'
+#' x <- matrix(rlnorm(60,1,1.4), ncol = 4)
+#' mapply(quad.mean, as.data.frame(x))
+#'
 quad.mean <- function(x, ..., na.rm = FALSE) {
+
   if (is.data.frame(x) || is.matrix(x)) {
-    if (na.rm) {
-      x <- apply(x, 2, function(column) column[!is.na(column)])
-    }
+    stop("Provide a numeric vector instead of a matrix or data frame")
+  }
 
-    quad_means <- apply(x, 2, function(column) {
-      n <- length(column)
-      square.sum <- sum(column^2)
-      sqrt.mean <- sqrt(square.sum / n)
-      return(sqrt.mean)
-    })
-
-    return(quad_means)
-  } else {
+  if(any(x < 0, na.rm = TRUE)){
+    stop("Mean only defined for non-negative values")
+  }
     if (na.rm) {
       x <- x[!is.na(x)]
     }
     n <- length(x)
     square.sum <- sum(x^2)
     sqrt.mean <- sqrt(square.sum / n)
+
     return(sqrt.mean)
-  }
 }
