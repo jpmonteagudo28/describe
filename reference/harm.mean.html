@@ -75,12 +75,12 @@ to the smallest elements of a set of observations.</p>
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">d</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Lognormal.html" class="external-link">rlnorm</a></span><span class="op">(</span><span class="fl">60</span>,<span class="fl">1</span>,<span class="fl">1.4</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu">harm.mean</span><span class="op">(</span><span class="va">d</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 1.495732</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 1.231459</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Lognormal.html" class="external-link">rlnorm</a></span><span class="op">(</span><span class="fl">60</span>,<span class="fl">1</span>,<span class="fl">1.4</span><span class="op">)</span>,ncol <span class="op">=</span> <span class="fl">4</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/mapply.html" class="external-link">mapply</a></span><span class="op">(</span><span class="va">harm.mean</span>, <span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html" class="external-link">as.data.frame</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       V1       V2       V3       V4 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1.398272 1.202991 0.462955 1.514473 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>        V1        V2        V3        V4 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1.8179572 0.6194540 0.9984670 0.8677264 </span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
