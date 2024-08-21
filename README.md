@@ -41,30 +41,30 @@ data <- gen.mcar(50,rho = .467,sigma = c(1,1.3),n_vars = 2, na_prob = .10)
 
 # Impute missing values using predictive mean matching
 imputed_data <- pmean.match(data, robust = TRUE, verbose = TRUE)
-#> Initial missing values: 8 (8.00%)
+#> Initial missing values: 11 (11.00%)
 #> Remaining missing values: 0 (0.00%)
 
 head(imputed_data,10)
 #>            V1         V2
-#> 1   1.7945695 -0.8437137
-#> 2   0.8450450 -0.4223777
-#> 3   1.5095428  2.0415957
-#> 4   0.0367590  0.3120576
-#> 5   0.5888666  0.6589248
-#> 6   0.4108906 -0.2331285
-#> 7  -2.3065881 -3.2270210
-#> 8  -0.5356565  0.6062233
-#> 9   0.9194851 -0.4223777
-#> 10  0.6637492  1.4249718
+#> 1  -1.4127223 -0.5205037
+#> 2   0.3090218  1.4865998
+#> 3   0.3240344  0.6016828
+#> 4  -0.9598153 -0.2362346
+#> 5  -1.4410359 -1.2159774
+#> 6  -0.4378229 -2.3591382
+#> 7   0.3059329  1.0015804
+#> 8  -1.0438890 -1.0072981
+#> 9  -1.7135055 -1.3785545
+#> 10 -0.4770137 -0.9220649
 
 summary(imputed_data)
-#>        V1                 V2         
-#>  Min.   :-2.30659   Min.   :-3.2270  
-#>  1st Qu.:-0.94678   1st Qu.:-0.4224  
-#>  Median : 0.05330   Median : 0.2962  
-#>  Mean   :-0.05093   Mean   : 0.1442  
-#>  3rd Qu.: 0.66375   3rd Qu.: 0.8352  
-#>  Max.   : 2.43697   Max.   : 2.5081
+#>        V1                V2         
+#>  Min.   :-2.3115   Min.   :-3.4326  
+#>  1st Qu.:-1.0948   1st Qu.:-1.2160  
+#>  Median :-0.1535   Median :-0.3153  
+#>  Mean   :-0.2703   Mean   :-0.2040  
+#>  3rd Qu.: 0.3237   3rd Qu.: 0.9156  
+#>  Max.   : 2.8761   Max.   : 2.7516
 ```
 
 What is special about using `README.Rmd` instead of just `README.md`?
