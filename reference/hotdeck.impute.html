@@ -119,13 +119,13 @@ Can be one of:</p><dl><dt><code>"deterministic"</code></dt>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">data</span> <span class="op">&lt;-</span> <span class="fu"><a href="gen.mcar.html">gen.mcar</a></span><span class="op">(</span><span class="fl">100</span>,rho <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">.56</span>,<span class="fl">.23</span>,<span class="fl">.18</span><span class="op">)</span>,sigma <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>,<span class="fl">2</span>,<span class="fl">.5</span><span class="op">)</span>,n_vars <span class="op">=</span> <span class="fl">3</span>,na_prob <span class="op">=</span> <span class="fl">.18</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">hot_data</span> <span class="op">&lt;-</span> <span class="fu">hotdeck.impute</span><span class="op">(</span><span class="va">data</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">hot_data</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>        V1                V2                V3            </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  Min.   :-2.3011   Min.   :-6.6337   Min.   :-1.4443133  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  1st Qu.:-0.6759   1st Qu.:-1.0528   1st Qu.:-0.4000302  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  Median : 0.3287   Median :-0.2437   Median : 0.0003882  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  Mean   : 0.1030   Mean   :-0.1821   Mean   :-0.0334813  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  3rd Qu.: 0.9566   3rd Qu.: 1.0816   3rd Qu.: 0.3620654  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  Max.   : 1.9539   Max.   : 5.2179   Max.   : 1.2584836  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>        V1                V2                V3          </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Min.   :-2.8766   Min.   :-4.8334   Min.   :-1.13091  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  1st Qu.:-1.0105   1st Qu.:-1.3556   1st Qu.:-0.26354  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Median :-0.1079   Median :-0.5331   Median : 0.02834  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Mean   :-0.1892   Mean   :-0.3364   Mean   : 0.01080  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  3rd Qu.: 0.4801   3rd Qu.: 0.5525   3rd Qu.: 0.30642  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Max.   : 2.3067   Max.   : 5.1222   Max.   : 0.96153  </span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

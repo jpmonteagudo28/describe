@@ -10,8 +10,10 @@
 <url><loc>https://describe.jpmonteagudo.com/reference/check.missing.html</loc></url>
 <url><loc>https://describe.jpmonteagudo.com/reference/cmean.impute.html</loc></url>
 <url><loc>https://describe.jpmonteagudo.com/reference/coldeck.impute.html</loc></url>
+<url><loc>https://describe.jpmonteagudo.com/reference/describe-package.html</loc></url>
 <url><loc>https://describe.jpmonteagudo.com/reference/gen.mar.html</loc></url>
 <url><loc>https://describe.jpmonteagudo.com/reference/gen.mcar.html</loc></url>
+<url><loc>https://describe.jpmonteagudo.com/reference/gen.mnar.html</loc></url>
 <url><loc>https://describe.jpmonteagudo.com/reference/geom.mad.html</loc></url>
 <url><loc>https://describe.jpmonteagudo.com/reference/geom.mean.html</loc></url>
 <url><loc>https://describe.jpmonteagudo.com/reference/geom.median.html</loc></url>
@@ -23,12 +25,16 @@
 <url><loc>https://describe.jpmonteagudo.com/reference/harm.mean.html</loc></url>
 <url><loc>https://describe.jpmonteagudo.com/reference/hotdeck.impute.html</loc></url>
 <url><loc>https://describe.jpmonteagudo.com/reference/index.html</loc></url>
+<url><loc>https://describe.jpmonteagudo.com/reference/kurtosis.html</loc></url>
 <url><loc>https://describe.jpmonteagudo.com/reference/mar.transform.html</loc></url>
 <url><loc>https://describe.jpmonteagudo.com/reference/mcar.transform.html</loc></url>
 <url><loc>https://describe.jpmonteagudo.com/reference/mnar.transform.html</loc></url>
 <url><loc>https://describe.jpmonteagudo.com/reference/pmean.match.html</loc></url>
 <url><loc>https://describe.jpmonteagudo.com/reference/quad.mean.html</loc></url>
+<url><loc>https://describe.jpmonteagudo.com/reference/skewness.html</loc></url>
 <url><loc>https://describe.jpmonteagudo.com/reference/stoc.impute.html</loc></url>
+<url><loc>https://describe.jpmonteagudo.com/reference/variance.html</loc></url>
 <url><loc>https://describe.jpmonteagudo.com/reference/weight.harm.mean.html</loc></url>
+<url><loc>https://describe.jpmonteagudo.com/reference/z.scores.html</loc></url>
 </urlset>
 
