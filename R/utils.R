@@ -405,3 +405,11 @@ find.index <- function(data,cols){
 
   return(index)
 }
+
+#-----------------------------------------------#
+# Helper function for correlation output set to
+# uppercase
+
+uppercase_title <- function(s) {
+  paste0(toupper(substring(s, 1L, 1L)), substring(s, 2L))
+}

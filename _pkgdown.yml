@@ -4,7 +4,7 @@ url: https://describe.jpmonteagudo.com
 template:
   bootstrap: 5
   bslib:
-    bg: "#CBD5DE"
+    bg: "#DFE8F3"
     fg: "#7C225C"
     primary: "#1C588C"
     base_font: {google: "Fira Sans Condensed"}

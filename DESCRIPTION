@@ -2,7 +2,9 @@ Package: describe
 Title: Compute varied descriptive statistics,create visualizations and handle missing data
 Version: 0.0.0.9000
 Authors@R: 
-    person("JP", "Monteagudo", , "jpmonteagudo2014@gmail.com", role = c("aut", "cre","cph"),
+    person("JP", "Monteagudo",
+    email = "jpmonteagudo2014@gmail.com", 
+    role = c("aut", "cre","cph"),
            comment = c(ORCID = "0009-0003-6465-6658"))
 Description: To provide estimates of central tendency for different distributions along with visualization options and imputation methods for handling missing data.
 License: AGPL (>= 3) + file LICENSE
@@ -13,9 +15,12 @@ URL: https://github.com/jpmonteagudo28/describe
 BugReports: https://github.com/jpmonteagudo28/describe/issues
 Imports: 
     betareg,
+    dplyr,
+    Hmisc,
     MASS,
     nnet,
     norm,
+    ppcor,
     robustbase
 Suggests: 
     spelling

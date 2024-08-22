@@ -2,9 +2,9 @@
 % Please edit documentation in R/gen_missing.R
 \name{gen.mcar}
 \alias{gen.mcar}
-\title{Generate a data frame containing NAs missing completely at random}
+\title{Generate a data frame with values missing completely at random}
 \usage{
-gen.mcar(len, rho, sigma, n_vars, na_prob = 0)
+gen.mcar(len, rho, sigma, n_vars, na_prob = 0.1)
 }
 \arguments{
 \item{len}{number of rows per column}
@@ -16,7 +16,7 @@ must be equal to the product of \code{n_vars} and half of \code{n_vars} minus on
 
 \item{n_vars}{total number of variables to be generated. At least two variables must be provided.}
 
-\item{na_prob}{desired probability of missingness in each variable.}
+\item{na_prob}{desired probability of missingness in each variable set to 10\% by default.}
 }
 \value{
 a data frame of at least 2 columns

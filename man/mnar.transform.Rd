@@ -21,7 +21,7 @@ a matrix or data frame containing NAs
 \description{
 The MNAR mechanism assumes that the probability and cause of missingness are unknown to us and lie
 in the unobserved data. Under this mechanism we generate missing values by looking at each
-variable's lowest values and replace them with NA.
+variable's lowest values and replacing them with NA.
 }
 \examples{
 set.seed(123)
