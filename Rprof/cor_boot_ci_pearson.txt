@@ -1,0 +1,6 @@
+sample.interval=20000
+"doTryCatch" "tryCatchOne" "tryCatchList" "tryCatch" "withCallingHandlers" ".rs.callAs" "Rprof" 
+"ls" "FUN" "lapply" ".rs.objectsOnSearchPath" ".rs.getCompletionsSearchPath" "Reduce" ".rs.rpc.get_completions" 
+"gsub" ".rs.fuzzyMatches" ".rs.getCompletionsSearchPath" "Reduce" ".rs.rpc.get_completions" 
+"file" "readLines" "tools:::.parse_CITATION_file" "utils:::readCitationFile" ".Call" "<Anonymous>" "do.call" "callFun" "<Anonymous>" "get_data" "detect_new" "rstudio$detect" "<Anonymous>" "mult_sign" "paste0" "spaces_around" "paste0" "dim_desc" "paste0" "size_sum.default" "size_sum" "paste" "obj_sum.default" "tibble::obj_sum" "cat" "str.tbl_df" "str" "doTryCatch" "tryCatchOne" "tryCatchList" "tryCatch" "try" "...elt" "withVisible" "capture.output" "doTryCatch" "tryCatchOne" "tryCatchList" "tryCatch" ".rs.withTimeLimit" ".rs.valueFromStr" ".rs.valueContentsImpl" "doTryCatch" "tryCatchOne" "tryCatchList" "tryCatch" ".rs.valueContents" ".rs.describeObject" 
+"gsub" ".rs.fuzzyMatches" ".rs.getCompletionsSearchPath" "Reduce" ".rs.rpc.get_completions" 

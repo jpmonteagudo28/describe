@@ -254,8 +254,6 @@ gen.mnar <- function(len,
   return(z)
 }
 
-
-
 #-------------------------------------------------#
 #' @title
 #'  Transform data to missing values completely at random

@@ -410,6 +410,23 @@ find.index <- function(data,cols){
 # Helper function for correlation output set to
 # uppercase
 
-uppercase_title <- function(s) {
+upper_title <- function(s) {
   paste0(toupper(substring(s, 1L, 1L)), substring(s, 2L))
+}
+
+#-----------------------------------------------#
+# Custom computation function for correlation
+cor.estimate <- function(data,i,method = "kendall",use = "complete.obs"){
+
+  stopifnot(is.data.frame(data) || is.matrix(data),
+            is.character(use),
+            is.character(method))
+
+  method <- match.arg(method, c("pearson", "kendall", "spearman"))
+
+  d <- data[i,]
+
+  cor_val <- stats::cor(d[,1],d[,2],method = method, use = use)
+
+  return(cor_val)
 }

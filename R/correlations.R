@@ -202,7 +202,7 @@ part.cor.matrix <- function(df,z,
 # Use when sample distribution is unknown/not Gaussian
 # x,y is your vector/matrix
 # @N refers to the number of samples for the bootstrap procedure
-# @ conf.level is the chosen confidence level (0 - 100)
+# @ conf_level is the chosen confidence level (0 - 100)
 # @alternative refers to less,greater or two-sided
 # @ method refers to the calc. of correlation coefficient (pearson, spearman,
 # kendall's)
@@ -213,13 +213,14 @@ part.cor.matrix <- function(df,z,
 
 
 
-
+## Use linear algebra or C++ instead of the stats package to optimize function
 cor.boot.ci <- function(x,y,
                     N = NULL,
-                    conf.level = 95,
+                    conf_level = 95,
                     alternative = "two.sided",
-                    method = "kendall",
-                    bootstrap = TRUE){
+                    method = "pearson",
+                    use = "complete.obs",
+                    boot = FALSE){
 
   if(length(x) != length(y))
     stop("'x' and 'y' must have the same length")
@@ -230,59 +231,58 @@ cor.boot.ci <- function(x,y,
 
 
   stopifnot(
-    is.numeric(N),
-    is.numeric(conf.level),
-    conf.level > 0 && conf.level < 100,
+    is.numeric(conf_level),
+    conf_level > 0 && conf_level < 100,
     is.character(alternative),
-    is.logical(bootstrap)
+    is.logical(boot)
   )
 
   alternative <- match.arg(alternative,c("two.sided", "less", "greater"))
   method <- match.arg(method, c("pearson", "kendall", "spearman"))
 
-  if(bootstrap == TRUE && is.null(N))
-    stop("Use method = 'kendall' or method = 'spearman' or provide the number of N to compute
+  if(boot && is.null(N))
+    stop("Provide the number of bootstrap samples to compute
          the confidence interval")
 
-  if (!bootstrap && !is.null(N))
-    warning("Samples are only used for bootstrap.If bootstrap = FALSE, N will be ignored.")
+  if (!boot && !is.null(N))
+    warning("Samples are only used for bootstrap.Ignoring 'N'.")
 
-  if(bootstrap && is.null(N))
-    stop("Set sample number to compute bootstrap estimate")
 
-  if(bootstrap == TRUE && !is.null(N) && method == "kendall" || method == "spearman"){
+  if(boot && method %in% c("kendall", "spearman")){
 
     # Run correlation analysis
-    cor.obs <- replicate(N, stats::cor(sample(x, replace = TRUE),
-                                       sample(y, replace = TRUE),
-                                       method = method))
-    cor.val <- stats::cor(x,y, method = method)
+    cor_boot <- boot::boot(data.frame(x,y),statistic = cor.estimate,
+                           R = N, method = method,use = use)
+
+    cor.val <- stats::cor(x,y, method = method, use = use)
+
+    alpha <- (1 - conf_level / 100) / 2
+    lower.ci <- stats::quantile(cor_boot$t, probs = alpha)
+    upper.ci <- stats::quantile(cor_boot$t, probs = 1 - alpha)
 
     if (alternative == "less") {
 
-      alpha <- conf.level / 100
+      alpha <- conf_level / 100
       lower.ci <- -1
-      upper.ci <- stats::quantile(cor.obs, probs = 1 - alpha)
+      upper.ci <- stats::quantile(cor_boot$t, probs = 1 - alpha)
+
     } else if (alternative == "greater") {
 
-      alpha <- conf.level / 100
-      lower.ci <- stats::quantile(cor.obs, probs = alpha)
+      alpha <- conf_level / 100
+      lower.ci <- stats::quantile(cor_boot$t, probs = alpha)
       upper.ci <- 1
-    } else if (alternative == "two.sided") {
-
-      alpha <- (1 - conf.level / 100) / 2
-      lower.ci <- stats::quantile(cor.obs, probs = alpha)
-      upper.ci <- stats::quantile(cor.obs, probs = 1 - alpha)
     }
+
     result <- list(coefficient = cor.val,
                    lower.ci = lower.ci,
                    upper.ci = upper.ci)
-  } else if( !bootstrap && method == "pearson") {
+
+  } else if(!boot && method == "pearson") {
 
     cor.val <- stats::cor(x, y,method = method)
 
     # Fischer Transformation of Pearson's correlation coeff.
-    z <- stats::qnorm(1 - (1 - conf.level/100) / 2)
+    z <- stats::qnorm(1 - (1 - conf_level/100) / 2)
     se <- 1 / sqrt(length(x) - 3)
     if (alternative == "less") {
 
@@ -299,15 +299,16 @@ cor.boot.ci <- function(x,y,
       lower.ci <- tanh(atanh(cor.val) - z * se)
       upper.ci <- tanh(atanh(cor.val) + z * se)
     }
+
     result <- list(coefficient = cor.val,
                    lower.ci = lower.ci,
                    upper.ci = upper.ci)
   }
-  else if(!bootstrap && method == "kendall" || method == "spearman")
-    stop("Fisher's transformation applies to Pearson's correlation coefficient. Use bootstrap for other methods")
+  else if(!boot && method %in% c("kendall","spearman"))
+    stop("Fisher's transformation applies to Pearson's correlation coefficient. Use boot for other methods")
 
   dplyr::tibble(
-    parameter = sprintf(uppercase_title(method)),
+    parameter = sprintf(upper_title(method)),
     coefficient = result$coefficient,
     lower.ci = result$lower.ci,
     upper.ci = result$upper.ci)
