@@ -5,6 +5,7 @@
 
 <!-- badges: start -->
 
+[![stability-wip](https://img.shields.io/badge/stability-wip-lightgrey.svg)](https://github.com/mkenney/software-guides/blob/master/STABILITY-BADGES.md#work-in-progress)
 [![CRAN
 status](https://www.r-pkg.org/badges/version/describe)](https://CRAN.R-project.org/package=describe)
 <!-- badges: end -->
